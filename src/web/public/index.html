@@ -1,0 +1,1203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BusinessTravelSearch</title>
+  <style>
+    :root {
+      --primary: #003DA5;
+      --primary-light: #0056D6;
+      --primary-dark: #002B75;
+      --accent: #C8102E;
+      --bg: #f5f6f8;
+      --bg-card: #ffffff;
+      --bg-sidebar: #ffffff;
+      --text: #2d3340;
+      --text-light: #6b7280;
+      --text-inverse: #ffffff;
+      --border: #dde1e7;
+      --success: #0a7c42;
+      --warning: #b45309;
+      --danger: #c8102e;
+      --user-bubble: #003DA5;
+      --assistant-bubble: #f0f2f5;
+      --radius: 8px;
+      --shadow: 0 1px 2px rgba(0,0,0,0.06);
+      --shadow-lg: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ---- Layout ---- */
+    .app {
+      display: flex;
+      height: 100vh;
+    }
+
+    .sidebar {
+      width: 260px;
+      background: var(--bg-sidebar);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+      border-right: 1px solid var(--border);
+    }
+
+    .sidebar-header {
+      padding: 16px 20px;
+      background: var(--primary);
+      color: var(--text-inverse);
+    }
+
+    .sidebar-header h1 {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: 0.2px;
+      color: var(--text-inverse);
+    }
+
+    .sidebar-header .subtitle {
+      font-size: 11px;
+      color: rgba(255,255,255,0.7);
+      margin-top: 2px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      padding: 12px;
+      overflow-y: auto;
+    }
+
+    .nav-section {
+      margin-bottom: 24px;
+    }
+
+    .nav-section-title {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      font-weight: 600;
+      color: var(--text-light);
+      padding: 0 12px;
+      margin-bottom: 6px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      transition: all 0.15s;
+    }
+
+    .nav-item:hover { background: #eef1f6; color: var(--primary); }
+    .nav-item.active { background: #e8edf5; color: var(--primary); font-weight: 600; }
+    .nav-item .icon { width: 18px; text-align: center; font-size: 15px; }
+
+    .sidebar-footer {
+      padding: 12px 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .user-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .user-badge:hover { background: #eef1f6; }
+
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .user-info { flex: 1; min-width: 0; }
+    .user-name { font-size: 13px; font-weight: 600; color: var(--text); }
+    .user-email { font-size: 11px; color: var(--text-light); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+    /* ---- Main Content ---- */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .main-header {
+      padding: 14px 24px;
+      background: var(--bg-card);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .main-header h2 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .status-badge.connected { background: #dcfce7; color: var(--success); }
+    .status-badge.disconnected { background: #fee2e2; color: var(--danger); }
+    .status-badge .dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+
+    /* ---- Chat Area ---- */
+    .chat-container {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .message {
+      display: flex;
+      gap: 12px;
+      max-width: 85%;
+      animation: fadeIn 0.2s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .message.user { align-self: flex-end; flex-direction: row-reverse; }
+    .message.assistant { align-self: flex-start; }
+
+    .message-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .message.user .message-avatar { background: var(--primary); color: white; }
+    .message.assistant .message-avatar { background: #e2e8f0; color: var(--text); }
+
+    .message-bubble {
+      padding: 12px 16px;
+      border-radius: var(--radius);
+      font-size: 14px;
+      line-height: 1.6;
+      box-shadow: var(--shadow);
+    }
+
+    .message.user .message-bubble {
+      background: var(--user-bubble);
+      color: white;
+      border-bottom-right-radius: 2px;
+    }
+
+    .message.assistant .message-bubble {
+      background: var(--assistant-bubble);
+      color: var(--text);
+      border-bottom-left-radius: 2px;
+      border: 1px solid var(--border);
+      box-shadow: none;
+    }
+
+    .message-bubble pre {
+      background: rgba(0,0,0,0.05);
+      padding: 12px;
+      border-radius: 8px;
+      overflow-x: auto;
+      font-size: 13px;
+      margin: 8px 0;
+    }
+
+    .message.user .message-bubble pre {
+      background: rgba(255,255,255,0.15);
+    }
+
+    .message-bubble .flight-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      margin: 8px 0;
+    }
+
+    .message-time {
+      font-size: 11px;
+      color: var(--text-light);
+      margin-top: 4px;
+      text-align: right;
+    }
+
+    .message.assistant .message-time { text-align: left; }
+
+    .typing-indicator {
+      display: none;
+      align-self: flex-start;
+      padding: 12px 16px;
+      background: var(--assistant-bubble);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      border-bottom-left-radius: 4px;
+    }
+
+    .typing-indicator.visible { display: flex; gap: 4px; }
+
+    .typing-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--text-light);
+      border-radius: 50%;
+      animation: typing 1.4s infinite;
+    }
+
+    .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+    .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes typing {
+      0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+      30% { transform: translateY(-6px); opacity: 1; }
+    }
+
+    /* ---- Quick Actions ---- */
+    .quick-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      padding: 0 24px 12px;
+    }
+
+    .quick-action {
+      padding: 8px 16px;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      background: white;
+      color: var(--text);
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .quick-action:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: #eff6ff;
+    }
+
+    /* ---- Input Area ---- */
+    .input-area {
+      padding: 16px 24px;
+      background: var(--bg-card);
+      border-top: 1px solid var(--border);
+    }
+
+    .input-wrapper {
+      display: flex;
+      gap: 12px;
+      align-items: flex-end;
+    }
+
+    .input-wrapper textarea {
+      flex: 1;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-family: inherit;
+      font-size: 14px;
+      resize: none;
+      outline: none;
+      min-height: 44px;
+      max-height: 120px;
+      line-height: 1.5;
+      transition: border-color 0.15s;
+    }
+
+    .input-wrapper textarea:focus { border-color: var(--primary); }
+
+    .send-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--primary);
+      color: white;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s;
+      flex-shrink: 0;
+    }
+
+    .send-btn:hover { background: var(--primary-dark); }
+    .send-btn:disabled { background: var(--text-light); cursor: not-allowed; }
+
+    .send-btn svg { width: 20px; height: 20px; }
+
+    /* ---- Auth Screen ---- */
+    .auth-screen {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background: var(--bg);
+    }
+
+    .auth-card {
+      background: var(--bg-card);
+      border-radius: 16px;
+      box-shadow: var(--shadow-lg);
+      padding: 40px;
+      width: 420px;
+      max-width: 90vw;
+    }
+
+    .auth-card h1 {
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .auth-card .subtitle {
+      color: var(--text-light);
+      font-size: 14px;
+      margin-bottom: 24px;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .form-group input:focus { border-color: var(--primary); }
+
+    .auth-btn {
+      width: 100%;
+      padding: 12px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+      margin-top: 8px;
+    }
+
+    .auth-btn:hover { background: var(--primary-dark); }
+
+    .auth-toggle {
+      text-align: center;
+      margin-top: 16px;
+      font-size: 13px;
+      color: var(--text-light);
+    }
+
+    .auth-toggle a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .auth-error {
+      background: #fef2f2;
+      color: var(--danger);
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    /* ---- Welcome State ---- */
+    .welcome-state {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+      text-align: center;
+    }
+
+    .welcome-icon {
+      width: 56px;
+      height: 56px;
+      background: var(--primary);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 16px;
+    }
+
+    .welcome-state h2 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--primary-dark);
+      margin-bottom: 8px;
+    }
+
+    .welcome-state p {
+      color: var(--text-light);
+      font-size: 13px;
+      max-width: 480px;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .welcome-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .welcome-action {
+      padding: 14px 20px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: white;
+      cursor: pointer;
+      transition: all 0.15s;
+      text-align: left;
+      max-width: 220px;
+    }
+
+    .welcome-action:hover {
+      border-color: var(--primary);
+      background: #f0f4fa;
+    }
+
+    .welcome-action .action-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .welcome-action .action-desc {
+      font-size: 12px;
+      color: var(--text-light);
+      line-height: 1.4;
+    }
+
+    .welcome-action.featured {
+      border-color: var(--primary);
+      background: #f0f4fa;
+    }
+
+    .welcome-action.featured .action-title {
+      color: var(--primary);
+    }
+
+    .welcome-action.featured:hover {
+      background: #e4ecf7;
+    }
+
+    /* ---- Travel Need Card ---- */
+    .travel-need-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin: 8px 0;
+    }
+
+    .travel-need-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .travel-need-card:hover {
+      border-color: var(--primary);
+      box-shadow: var(--shadow);
+    }
+
+    .travel-need-card .tn-title { font-weight: 600; font-size: 13px; }
+    .travel-need-card .tn-detail { font-size: 12px; color: var(--text-light); margin-top: 2px; }
+    .travel-need-card .tn-urgency {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 500;
+      margin-top: 4px;
+    }
+    .tn-urgency.critical { background: #fef2f2; color: var(--danger); }
+    .tn-urgency.high { background: #fff7ed; color: var(--warning); }
+    .tn-urgency.medium { background: #eff6ff; color: var(--primary); }
+    .tn-urgency.low { background: #f0fdf4; color: var(--success); }
+
+    /* ---- Responsive ---- */
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .message { max-width: 95%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Auth Screen -->
+  <div id="auth-screen" class="auth-screen">
+    <div class="auth-card">
+      <h1>BusinessTravelSearch</h1>
+      <p class="subtitle">Your honest, AI-powered business travel assistant</p>
+
+      <div id="auth-error" class="auth-error"></div>
+
+      <!-- Login Form -->
+      <form id="login-form">
+        <div class="form-group">
+          <label for="login-email">Email</label>
+          <input type="email" id="login-email" placeholder="you@company.com" required>
+        </div>
+        <div class="form-group">
+          <label for="login-password">Password</label>
+          <input type="password" id="login-password" placeholder="Your password" required>
+        </div>
+        <button type="submit" class="auth-btn">Sign In</button>
+      </form>
+
+      <!-- Register Form (hidden by default) -->
+      <form id="register-form" style="display:none">
+        <div class="form-group">
+          <label for="reg-name">Full Name</label>
+          <input type="text" id="reg-name" placeholder="Jane Smith" required>
+        </div>
+        <div class="form-group">
+          <label for="reg-email">Email</label>
+          <input type="email" id="reg-email" placeholder="you@company.com" required>
+        </div>
+        <div class="form-group">
+          <label for="reg-password">Password</label>
+          <input type="password" id="reg-password" placeholder="Create a password" required minlength="6">
+        </div>
+        <button type="submit" class="auth-btn">Create Account</button>
+      </form>
+
+      <div class="auth-toggle">
+        <span id="toggle-text">Don't have an account?</span>
+        <a id="toggle-link" onclick="toggleAuthForm()">Sign up</a>
+      </div>
+
+      <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border); text-align: center;">
+        <button onclick="quickDemo()" class="auth-btn" style="background: var(--primary-light);">
+          Quick Demo (No Account Needed)
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main App -->
+  <div id="app" class="app" style="display:none">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <h1>BusinessTravelSearch</h1>
+        <div class="subtitle">AI Travel Assistant</div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section">
+          <div class="nav-section-title">Navigation</div>
+          <div class="nav-item active" data-view="chat">
+            <span class="icon">&#128172;</span> Chat
+          </div>
+          <div class="nav-item" data-view="calendar">
+            <span class="icon">&#128197;</span> Calendar
+          </div>
+          <div class="nav-item" data-view="preferences">
+            <span class="icon">&#9881;</span> Preferences
+          </div>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-section-title">Quick Actions</div>
+          <div class="nav-item" onclick="sendQuickMessage('Scan my calendar')">
+            <span class="icon">&#128269;</span> Scan Calendar
+          </div>
+          <div class="nav-item" onclick="sendQuickMessage('Search flights')">
+            <span class="icon">&#9992;</span> Search Flights
+          </div>
+          <div class="nav-item" onclick="sendQuickMessage('Help')">
+            <span class="icon">&#10067;</span> Help
+          </div>
+        </div>
+
+        <div class="nav-section" id="travel-needs-nav" style="display:none">
+          <div class="nav-section-title">Detected Travel</div>
+          <div id="travel-needs-list"></div>
+        </div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-badge" onclick="logout()">
+          <div class="user-avatar" id="user-avatar">?</div>
+          <div class="user-info">
+            <div class="user-name" id="user-display-name">User</div>
+            <div class="user-email" id="user-display-email">Sign out</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="main-header">
+        <h2 id="view-title">Travel Assistant</h2>
+        <div id="connection-status" class="status-badge disconnected">
+          <span class="dot"></span>
+          <span id="status-text">Connecting...</span>
+        </div>
+      </div>
+
+      <!-- Welcome State (shown when no messages) -->
+      <div id="welcome-state" class="welcome-state">
+        <div class="welcome-icon">&#9992;</div>
+        <h2>Welcome to BusinessTravelSearch</h2>
+        <p>
+          I'm your honest, AI-powered travel assistant. I can scan your calendar to detect upcoming travel,
+          search for the best flights based on your preferences, and help you book directly with airlines.
+          No hidden fees, no biased rankings -- just honest recommendations.
+        </p>
+        <div class="welcome-actions">
+          <div class="welcome-action" onclick="sendQuickMessage('Scan my calendar')">
+            <div class="action-title">Scan Calendar</div>
+            <div class="action-desc">Check upcoming events for travel needs</div>
+          </div>
+          <div class="welcome-action" onclick="sendQuickMessage('Search flights')">
+            <div class="action-title">Search Flights</div>
+            <div class="action-desc">Find flights for detected trips</div>
+          </div>
+          <div class="welcome-action" onclick="sendQuickMessage('Hello!')">
+            <div class="action-title">Say Hello</div>
+            <div class="action-desc">Start a conversation</div>
+          </div>
+          <div class="welcome-action" onclick="sendQuickMessage('Help')">
+            <div class="action-title">Get Help</div>
+            <div class="action-desc">See everything I can do</div>
+          </div>
+          <div class="welcome-action featured" onclick="sendQuickMessage('Lets check out travel options for our conference season')">
+            <div class="action-title">Conference Season</div>
+            <div class="action-desc">Plan team travel for upcoming conferences</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chat messages -->
+      <div id="chat-container" class="chat-container" style="display:none"></div>
+
+      <!-- Typing indicator -->
+      <div id="typing-indicator" class="typing-indicator">
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+        <div class="typing-dot"></div>
+      </div>
+
+      <!-- Quick actions -->
+      <div id="quick-actions" class="quick-actions" style="display:none">
+        <button class="quick-action" onclick="sendQuickMessage('Scan my calendar')">Scan Calendar</button>
+        <button class="quick-action" onclick="sendQuickMessage('Search flights')">Search Flights</button>
+        <button class="quick-action" onclick="sendQuickMessage('What are my preferences?')">My Preferences</button>
+      </div>
+
+      <!-- Input area -->
+      <div class="input-area">
+        <div class="input-wrapper">
+          <textarea
+            id="message-input"
+            placeholder="Ask about travel, search flights, or say 'scan my calendar'..."
+            rows="1"
+            onkeydown="handleKeydown(event)"
+            oninput="autoResize(this)"
+          ></textarea>
+          <button id="send-btn" class="send-btn" onclick="sendMessage()" disabled>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+<script>
+// ============================================================
+// BusinessTravelSearch - Client Application
+// ============================================================
+
+const API_BASE = '';
+let authToken = null;
+let currentUser = null;
+let ws = null;
+
+// ---- Auth ----
+
+function toggleAuthForm() {
+  const loginForm = document.getElementById('login-form');
+  const registerForm = document.getElementById('register-form');
+  const toggleText = document.getElementById('toggle-text');
+  const toggleLink = document.getElementById('toggle-link');
+
+  if (loginForm.style.display !== 'none') {
+    loginForm.style.display = 'none';
+    registerForm.style.display = 'block';
+    toggleText.textContent = 'Already have an account?';
+    toggleLink.textContent = 'Sign in';
+  } else {
+    loginForm.style.display = 'block';
+    registerForm.style.display = 'none';
+    toggleText.textContent = "Don't have an account?";
+    toggleLink.textContent = 'Sign up';
+  }
+  clearAuthError();
+}
+
+function showAuthError(msg) {
+  const el = document.getElementById('auth-error');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+function clearAuthError() {
+  document.getElementById('auth-error').style.display = 'none';
+}
+
+document.getElementById('login-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  clearAuthError();
+  const email = document.getElementById('login-email').value;
+  const password = document.getElementById('login-password').value;
+
+  try {
+    const res = await fetch(`${API_BASE}/api/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
+    const data = await res.json();
+    if (!data.success) throw new Error(data.error);
+    onAuthSuccess(data.data);
+  } catch (err) {
+    showAuthError(err.message);
+  }
+});
+
+document.getElementById('register-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  clearAuthError();
+  const name = document.getElementById('reg-name').value;
+  const email = document.getElementById('reg-email').value;
+  const password = document.getElementById('reg-password').value;
+
+  try {
+    const res = await fetch(`${API_BASE}/api/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, password }),
+    });
+    const data = await res.json();
+    if (!data.success) throw new Error(data.error);
+    onAuthSuccess(data.data);
+  } catch (err) {
+    showAuthError(err.message);
+  }
+});
+
+async function quickDemo() {
+  clearAuthError();
+  const demoEmail = `demo-${Date.now()}@example.com`;
+  try {
+    const res = await fetch(`${API_BASE}/api/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name: 'Demo User',
+        email: demoEmail,
+        password: 'demo-password-123',
+      }),
+    });
+    const data = await res.json();
+    if (!data.success) throw new Error(data.error);
+
+    // Set home city for the demo user
+    await fetch(`${API_BASE}/api/profile`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${data.data.token}`,
+      },
+      body: JSON.stringify({ homeCity: 'New York', homeAirport: 'JFK' }),
+    });
+
+    // Connect a mock calendar
+    await fetch(`${API_BASE}/api/calendar/connect`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${data.data.token}`,
+      },
+      body: JSON.stringify({ calendarName: 'Work Calendar' }),
+    });
+
+    onAuthSuccess(data.data);
+  } catch (err) {
+    showAuthError(err.message);
+  }
+}
+
+function onAuthSuccess(data) {
+  authToken = data.token;
+  currentUser = data.user;
+
+  localStorage.setItem('bts_token', authToken);
+
+  document.getElementById('auth-screen').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
+
+  const initials = currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase();
+  document.getElementById('user-avatar').textContent = initials;
+  document.getElementById('user-display-name').textContent = currentUser.name;
+  document.getElementById('user-display-email').textContent = currentUser.email;
+
+  connectWebSocket();
+  updateConnectionStatus(true);
+}
+
+function logout() {
+  authToken = null;
+  currentUser = null;
+  localStorage.removeItem('bts_token');
+  if (ws) ws.close();
+  document.getElementById('auth-screen').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('chat-container').innerHTML = '';
+  document.getElementById('welcome-state').style.display = 'flex';
+  document.getElementById('chat-container').style.display = 'none';
+}
+
+// Check for saved token on load
+async function checkSavedAuth() {
+  const saved = localStorage.getItem('bts_token');
+  if (!saved) return;
+
+  try {
+    const res = await fetch(`${API_BASE}/api/auth/me`, {
+      headers: { 'Authorization': `Bearer ${saved}` },
+    });
+    const data = await res.json();
+    if (data.success) {
+      onAuthSuccess({ token: saved, user: data.data });
+    }
+  } catch {
+    localStorage.removeItem('bts_token');
+  }
+}
+
+// ---- WebSocket ----
+
+function connectWebSocket() {
+  const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+  ws = new WebSocket(`${protocol}//${location.host}/ws`);
+
+  ws.onopen = () => {
+    ws.send(JSON.stringify({ type: 'auth', token: authToken }));
+    updateConnectionStatus(true);
+  };
+
+  ws.onmessage = (event) => {
+    const data = JSON.parse(event.data);
+    handleWsMessage(data);
+  };
+
+  ws.onclose = () => {
+    updateConnectionStatus(false);
+    // Reconnect after delay
+    setTimeout(() => {
+      if (authToken) connectWebSocket();
+    }, 3000);
+  };
+
+  ws.onerror = () => {
+    updateConnectionStatus(false);
+  };
+}
+
+function handleWsMessage(data) {
+  switch (data.type) {
+    case 'auth_success':
+      updateConnectionStatus(true);
+      break;
+
+    case 'chat_response':
+      hideTyping();
+      appendMessage('assistant', data.message.content);
+      break;
+
+    case 'calendar_scan':
+      hideTyping();
+      appendMessage('assistant', data.summary);
+      if (data.travelNeeds && data.travelNeeds.length > 0) {
+        showTravelNeeds(data.travelNeeds);
+      }
+      break;
+
+    case 'typing':
+      if (data.isTyping) showTyping();
+      else hideTyping();
+      break;
+
+    case 'error':
+      hideTyping();
+      appendMessage('assistant', `I encountered an issue: ${data.error}`);
+      break;
+  }
+}
+
+function updateConnectionStatus(connected) {
+  const badge = document.getElementById('connection-status');
+  const text = document.getElementById('status-text');
+  badge.className = `status-badge ${connected ? 'connected' : 'disconnected'}`;
+  text.textContent = connected ? 'Connected' : 'Disconnected';
+}
+
+// ---- Chat ----
+
+async function sendMessage() {
+  const input = document.getElementById('message-input');
+  const message = input.value.trim();
+  if (!message) return;
+
+  input.value = '';
+  autoResize(input);
+
+  showChatView();
+  appendMessage('user', message);
+  showTyping();
+
+  // Use WebSocket if available, else fallback to REST
+  if (ws && ws.readyState === WebSocket.OPEN) {
+    ws.send(JSON.stringify({ type: 'chat', content: message }));
+  } else {
+    try {
+      const res = await fetch(`${API_BASE}/api/chat`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`,
+        },
+        body: JSON.stringify({ message }),
+      });
+      const data = await res.json();
+      hideTyping();
+      if (data.success) {
+        appendMessage('assistant', data.data.content);
+      } else {
+        appendMessage('assistant', `Error: ${data.error}`);
+      }
+    } catch (err) {
+      hideTyping();
+      appendMessage('assistant', 'Connection error. Please try again.');
+    }
+  }
+}
+
+function sendQuickMessage(msg) {
+  document.getElementById('message-input').value = msg;
+  sendMessage();
+}
+
+function appendMessage(role, content) {
+  const container = document.getElementById('chat-container');
+  const div = document.createElement('div');
+  div.className = `message ${role}`;
+
+  const avatar = document.createElement('div');
+  avatar.className = 'message-avatar';
+  avatar.textContent = role === 'user'
+    ? (currentUser?.name?.charAt(0)?.toUpperCase() || 'U')
+    : 'BT';
+
+  const bubble = document.createElement('div');
+  bubble.className = 'message-bubble';
+  bubble.innerHTML = formatMessage(content);
+
+  const time = document.createElement('div');
+  time.className = 'message-time';
+  time.textContent = new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+
+  const wrapper = document.createElement('div');
+  wrapper.appendChild(bubble);
+  wrapper.appendChild(time);
+
+  div.appendChild(avatar);
+  div.appendChild(wrapper);
+  container.appendChild(div);
+
+  container.scrollTop = container.scrollHeight;
+  document.getElementById('quick-actions').style.display = 'flex';
+}
+
+function formatMessage(content) {
+  // Convert markdown-like formatting to HTML
+  let html = escapeHtml(content);
+
+  // Bold
+  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+
+  // Flight option blocks (lines starting with #N.)
+  html = html.replace(/^#(\d+)\.\s+(.+)$/gm, '<strong style="color: var(--primary)">#$1. $2</strong>');
+
+  // URLs to links
+  html = html.replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener" style="color: var(--primary)">$1</a>');
+
+  // Newlines to <br>
+  html = html.replace(/\n/g, '<br>');
+
+  // Bullet points
+  html = html.replace(/^- (.+)/gm, '<span style="display:block; padding-left: 12px;">&#8226; $1</span>');
+
+  return html;
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function showChatView() {
+  document.getElementById('welcome-state').style.display = 'none';
+  document.getElementById('chat-container').style.display = 'flex';
+}
+
+function showTyping() {
+  document.getElementById('typing-indicator').classList.add('visible');
+  const container = document.getElementById('chat-container');
+  container.scrollTop = container.scrollHeight;
+}
+
+function hideTyping() {
+  document.getElementById('typing-indicator').classList.remove('visible');
+}
+
+function showTravelNeeds(needs) {
+  const nav = document.getElementById('travel-needs-nav');
+  const list = document.getElementById('travel-needs-list');
+  nav.style.display = 'block';
+  list.innerHTML = '';
+
+  for (const need of needs) {
+    const item = document.createElement('div');
+    item.className = 'nav-item';
+    item.innerHTML = `<span class="icon">&#9992;</span> ${need.destinationCity}`;
+    item.onclick = () => sendQuickMessage(`Search flights to ${need.destinationCity}`);
+    list.appendChild(item);
+  }
+}
+
+// ---- Input ----
+
+function handleKeydown(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+}
+
+function autoResize(textarea) {
+  textarea.style.height = 'auto';
+  textarea.style.height = Math.min(textarea.scrollHeight, 120) + 'px';
+
+  const btn = document.getElementById('send-btn');
+  btn.disabled = !textarea.value.trim();
+}
+
+// Enable/disable send button on input
+document.getElementById('message-input').addEventListener('input', function() {
+  document.getElementById('send-btn').disabled = !this.value.trim();
+});
+
+// ---- Nav ----
+
+document.querySelectorAll('.nav-item[data-view]').forEach(item => {
+  item.addEventListener('click', () => {
+    document.querySelectorAll('.nav-item[data-view]').forEach(i => i.classList.remove('active'));
+    item.classList.add('active');
+    const view = item.dataset.view;
+    document.getElementById('view-title').textContent =
+      view === 'chat' ? 'Travel Assistant' :
+      view === 'calendar' ? 'Calendar' : 'Preferences';
+  });
+});
+
+// ---- Init ----
+checkSavedAuth();
+</script>
+</body>
+</html>

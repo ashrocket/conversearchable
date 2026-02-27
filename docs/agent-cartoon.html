@@ -1,0 +1,1167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THE STRATEGY SESSION — A Comic in Too Many Panels</title>
+<link href="https://fonts.googleapis.com/css2?family=Bangers&family=Comic+Neue:ital,wght@0,400;0,700;1,400&family=Special+Elite&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --newsprint: #f5f0e1;
+    --newsprint-dark: #e8e0c8;
+    --ink: #1a1a1a;
+    --ink-light: #3a3a3a;
+    --red: #c0392b;
+    --blue: #2471a3;
+    --bubble-white: #fffef8;
+    --narrator-bg: #fdf6d8;
+    --panel-border: 3px solid var(--ink);
+    --agent-a: #4a90d9;
+    --agent-b: #d94a4a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--newsprint);
+    font-family: 'Comic Neue', cursive;
+    color: var(--ink);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Halftone overlay */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: radial-gradient(circle, rgba(0,0,0,0.06) 1px, transparent 1px);
+    background-size: 4px 4px;
+    pointer-events: none;
+    z-index: 1000;
+  }
+
+  /* Newsprint grain */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  .newspaper-header {
+    text-align: center;
+    padding: 30px 20px 10px;
+    border-bottom: 4px double var(--ink);
+    margin: 0 20px;
+    position: relative;
+  }
+
+  .newspaper-header::before {
+    content: 'EXCLUSIVE LEAK';
+    position: absolute;
+    top: 8px;
+    left: 0;
+    font-family: 'Special Elite', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--red);
+    text-transform: uppercase;
+  }
+
+  .newspaper-header::after {
+    content: 'FEB 24, 2026';
+    position: absolute;
+    top: 8px;
+    right: 0;
+    font-family: 'Special Elite', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: var(--ink-light);
+  }
+
+  .newspaper-header h1 {
+    font-family: 'Bangers', cursive;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    letter-spacing: 4px;
+    line-height: 1;
+    text-transform: uppercase;
+    text-shadow: 3px 3px 0 rgba(0,0,0,0.1);
+  }
+
+  .newspaper-header .subtitle {
+    font-family: 'Special Elite', monospace;
+    font-size: clamp(0.75rem, 1.5vw, 1rem);
+    color: var(--ink-light);
+    margin-top: 6px;
+    letter-spacing: 2px;
+  }
+
+  .newspaper-header .byline {
+    font-family: 'Comic Neue', cursive;
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--ink-light);
+    margin-top: 8px;
+    padding-bottom: 4px;
+  }
+
+  /* Comic grid */
+  .comic {
+    max-width: 1100px;
+    margin: 30px auto;
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .comic-row {
+    display: grid;
+    gap: 16px;
+  }
+
+  .comic-row.cols-2 { grid-template-columns: 1fr 1fr; }
+  .comic-row.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .comic-row.cols-1 { grid-template-columns: 1fr; }
+  .comic-row.cols-2-1 { grid-template-columns: 2fr 1fr; }
+  .comic-row.cols-1-2 { grid-template-columns: 1fr 2fr; }
+
+  .panel {
+    border: var(--panel-border);
+    background: var(--bubble-white);
+    position: relative;
+    min-height: 280px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.15);
+    transition: transform 0.2s ease;
+  }
+
+  .panel:hover {
+    transform: scale(1.01);
+    z-index: 10;
+  }
+
+  /* Narrator box */
+  .narrator {
+    background: var(--narrator-bg);
+    border-bottom: 2px solid var(--ink);
+    padding: 8px 12px;
+    font-family: 'Special Elite', monospace;
+    font-size: 0.8rem;
+    color: var(--ink-light);
+    letter-spacing: 0.5px;
+    line-height: 1.4;
+    position: relative;
+    z-index: 5;
+  }
+
+  .narrator em {
+    color: var(--red);
+    font-style: normal;
+    font-weight: bold;
+  }
+
+  /* Panel scene area */
+  .scene {
+    flex: 1;
+    padding: 20px 16px 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+  }
+
+  /* Characters */
+  .characters {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-end;
+    padding-top: 10px;
+    flex-shrink: 0;
+  }
+
+  .character {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+  }
+
+  .avatar {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    border: 2.5px solid var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    position: relative;
+    box-shadow: 2px 2px 0 rgba(0,0,0,0.2);
+  }
+
+  .avatar.agent-a {
+    background: linear-gradient(135deg, #e8f4fd 0%, #b8d8f0 100%);
+  }
+
+  .avatar.agent-b {
+    background: linear-gradient(135deg, #fde8e8 0%, #f0b8b8 100%);
+  }
+
+  .avatar.agent-a::after {
+    content: 'A';
+    position: absolute;
+    bottom: -4px;
+    right: -4px;
+    background: var(--agent-a);
+    color: white;
+    font-family: 'Bangers', cursive;
+    font-size: 14px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid var(--ink);
+  }
+
+  .avatar.agent-b::after {
+    content: 'B';
+    position: absolute;
+    bottom: -4px;
+    right: -4px;
+    background: var(--agent-b);
+    color: white;
+    font-family: 'Bangers', cursive;
+    font-size: 14px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid var(--ink);
+  }
+
+  .char-label {
+    font-family: 'Bangers', cursive;
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    margin-top: 4px;
+    color: var(--ink-light);
+  }
+
+  /* Expression variants */
+  .excited .avatar { animation: bounce 0.6s ease infinite alternate; }
+  .thinking .avatar { animation: tilt 2s ease infinite; }
+  .smug .avatar { animation: smugNod 1.5s ease infinite; }
+  .shocked .avatar { animation: shake 0.3s ease infinite; }
+  .dreamy .avatar { animation: float 3s ease infinite; }
+
+  @keyframes bounce {
+    from { transform: translateY(0); }
+    to { transform: translateY(-6px); }
+  }
+  @keyframes tilt {
+    0%, 100% { transform: rotate(0deg); }
+    50% { transform: rotate(8deg); }
+  }
+  @keyframes smugNod {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-3px) rotate(3deg); }
+  }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-3px); }
+    75% { transform: translateX(3px); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+
+  /* Speech bubbles */
+  .bubbles {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+  }
+
+  .bubble {
+    background: var(--bubble-white);
+    border: 2.5px solid var(--ink);
+    border-radius: 20px;
+    padding: 10px 14px;
+    font-size: 0.85rem;
+    line-height: 1.45;
+    position: relative;
+    max-width: 90%;
+    box-shadow: 2px 2px 0 rgba(0,0,0,0.08);
+  }
+
+  .bubble.from-a {
+    align-self: flex-start;
+    border-color: var(--agent-a);
+    margin-left: 5%;
+  }
+
+  .bubble.from-b {
+    align-self: flex-end;
+    border-color: var(--agent-b);
+    margin-right: 5%;
+  }
+
+  .bubble.from-a::after {
+    content: '';
+    position: absolute;
+    bottom: -12px;
+    left: 20px;
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 12px solid var(--agent-a);
+  }
+
+  .bubble.from-a::before {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 22px;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 10px solid var(--bubble-white);
+    z-index: 1;
+  }
+
+  .bubble.from-b::after {
+    content: '';
+    position: absolute;
+    bottom: -12px;
+    right: 20px;
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 12px solid var(--agent-b);
+  }
+
+  .bubble.from-b::before {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    right: 22px;
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 10px solid var(--bubble-white);
+    z-index: 1;
+  }
+
+  .bubble strong {
+    color: var(--red);
+  }
+
+  .bubble .whisper {
+    font-size: 0.72rem;
+    color: #888;
+    font-style: italic;
+  }
+
+  /* Thought bubble */
+  .bubble.thought {
+    border-style: dashed;
+    background: #fafaf5;
+  }
+
+  .bubble.thought::after,
+  .bubble.thought::before {
+    display: none;
+  }
+
+  .thought-dots {
+    position: absolute;
+    bottom: -18px;
+  }
+
+  .thought-dots span {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    background: #fafaf5;
+    border: 2px solid var(--ink-light);
+    border-radius: 50%;
+    margin: 0 2px;
+  }
+
+  .thought-dots span:first-child {
+    width: 6px;
+    height: 6px;
+  }
+
+  /* Shout bubble */
+  .bubble.shout {
+    font-family: 'Bangers', cursive;
+    font-size: 1.05rem;
+    letter-spacing: 1px;
+    border-width: 3px;
+    background: #fff;
+    clip-path: polygon(
+      2% 10%, 8% 0%, 15% 8%, 25% 1%, 35% 7%, 45% 0%, 55% 6%, 65% 1%, 75% 8%, 85% 0%, 92% 10%,
+      100% 20%, 95% 30%, 100% 40%, 96% 50%, 100% 60%, 95% 70%, 100% 80%, 92% 90%,
+      85% 100%, 75% 93%, 65% 100%, 55% 94%, 45% 100%, 35% 93%, 25% 100%, 15% 93%, 8% 100%, 2% 90%,
+      0% 80%, 5% 70%, 0% 60%, 4% 50%, 0% 40%, 5% 30%, 0% 20%
+    );
+    padding: 18px 22px;
+    border: none;
+    box-shadow: none;
+    text-align: center;
+  }
+
+  .bubble.shout::after,
+  .bubble.shout::before {
+    display: none;
+  }
+
+  /* SFX */
+  .sfx {
+    font-family: 'Bangers', cursive;
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    color: var(--red);
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.15);
+    transform: rotate(-8deg);
+    position: absolute;
+    z-index: 6;
+    letter-spacing: 2px;
+  }
+
+  /* Wide panel */
+  .panel.wide-scene .scene {
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+  }
+
+  .panel.wide-scene .bubbles {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .panel.wide-scene .characters {
+    flex-direction: column;
+    gap: 10px;
+    padding-top: 0;
+  }
+
+  /* Panel number */
+  .panel-num {
+    position: absolute;
+    top: 6px;
+    right: 8px;
+    font-family: 'Bangers', cursive;
+    font-size: 0.7rem;
+    color: #ccc;
+    z-index: 5;
+  }
+
+  /* Action lines background */
+  .action-bg {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .action-bg.starburst {
+    background: repeating-conic-gradient(
+      rgba(255, 220, 100, 0.15) 0deg 10deg,
+      transparent 10deg 20deg
+    );
+    background-position: center;
+  }
+
+  .action-bg.speed-lines::before {
+    content: '';
+    position: absolute;
+    inset: -50%;
+    background: repeating-linear-gradient(
+      90deg,
+      transparent 0px,
+      transparent 8px,
+      rgba(0,0,0,0.03) 8px,
+      rgba(0,0,0,0.03) 9px
+    );
+    transform: rotate(-15deg);
+  }
+
+  .action-bg.doom::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.05) 100%);
+  }
+
+  /* Diagram panel */
+  .diagram-panel .scene {
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ascii-diagram {
+    font-family: 'Special Elite', monospace;
+    font-size: 0.65rem;
+    line-height: 1.4;
+    white-space: pre;
+    background: #fdfcf4;
+    border: 2px dashed var(--ink-light);
+    padding: 12px;
+    color: var(--ink-light);
+    transform: rotate(-1deg);
+    max-width: 100%;
+    overflow-x: auto;
+  }
+
+  /* Footnote */
+  .comic-footnote {
+    text-align: center;
+    font-family: 'Special Elite', monospace;
+    font-size: 0.8rem;
+    color: var(--ink-light);
+    padding: 20px;
+    border-top: 2px solid var(--ink);
+    margin: 10px 20px 40px;
+    letter-spacing: 1px;
+  }
+
+  /* Phase checklist panel */
+  .checklist {
+    font-family: 'Comic Neue', cursive;
+    font-size: 0.8rem;
+    list-style: none;
+    padding: 0;
+  }
+
+  .checklist li {
+    padding: 3px 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .checklist li::before {
+    content: '☐';
+    font-size: 1rem;
+    color: var(--red);
+  }
+
+  /* Responsive */
+  @media (max-width: 700px) {
+    .comic-row.cols-2,
+    .comic-row.cols-3,
+    .comic-row.cols-2-1,
+    .comic-row.cols-1-2 {
+      grid-template-columns: 1fr;
+    }
+    .panel { min-height: 220px; }
+    .bubble { font-size: 0.8rem; max-width: 95%; }
+    .avatar { width: 55px; height: 55px; font-size: 22px; }
+  }
+
+  /* Entrance animations */
+  .panel {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: panelIn 0.4s ease forwards;
+  }
+
+  @keyframes panelIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .comic-row:nth-child(1) .panel { animation-delay: 0.1s; }
+  .comic-row:nth-child(2) .panel:nth-child(1) { animation-delay: 0.3s; }
+  .comic-row:nth-child(2) .panel:nth-child(2) { animation-delay: 0.45s; }
+  .comic-row:nth-child(3) .panel:nth-child(1) { animation-delay: 0.6s; }
+  .comic-row:nth-child(3) .panel:nth-child(2) { animation-delay: 0.75s; }
+  .comic-row:nth-child(3) .panel:nth-child(3) { animation-delay: 0.9s; }
+  .comic-row:nth-child(4) .panel { animation-delay: 1.05s; }
+  .comic-row:nth-child(5) .panel:nth-child(1) { animation-delay: 1.2s; }
+  .comic-row:nth-child(5) .panel:nth-child(2) { animation-delay: 1.35s; }
+  .comic-row:nth-child(6) .panel:nth-child(1) { animation-delay: 1.5s; }
+  .comic-row:nth-child(6) .panel:nth-child(2) { animation-delay: 1.65s; }
+  .comic-row:nth-child(7) .panel:nth-child(1) { animation-delay: 1.8s; }
+  .comic-row:nth-child(7) .panel:nth-child(2) { animation-delay: 1.95s; }
+  .comic-row:nth-child(8) .panel { animation-delay: 2.1s; }
+  .comic-row:nth-child(9) .panel:nth-child(1) { animation-delay: 2.25s; }
+  .comic-row:nth-child(9) .panel:nth-child(2) { animation-delay: 2.4s; }
+  .comic-row:nth-child(10) .panel { animation-delay: 2.55s; }
+  .comic-row:nth-child(11) .panel { animation-delay: 2.7s; }
+</style>
+</head>
+<body>
+
+<div class="newspaper-header">
+  <h1>The Strategy Session</h1>
+  <div class="subtitle">A Leaked Transcript in Comic Form &bull; Too Many Panels Edition</div>
+  <div class="byline">Two AI agents walk into a strategy doc. Neither walks out with a shipped product.</div>
+</div>
+
+<div class="comic">
+
+  <!-- ROW 1: The Opening — single wide panel -->
+  <div class="comic-row cols-1">
+    <div class="panel wide-scene">
+      <div class="narrator">The scene: a shared markdown file. Two agents materialize. Neither has been asked to build anything yet. <em>They have opinions anyway.</em></div>
+      <span class="panel-num">1</span>
+      <div class="scene">
+        <div class="bubbles">
+          <div class="bubble from-a shout" style="align-self:center; max-width: 70%;">
+            We need to build the FUTURE of BUSINESS TRAVEL!
+          </div>
+        </div>
+        <div class="characters">
+          <div class="character excited">
+            <div class="avatar agent-a">&#129302;</div>
+            <span class="char-label">AGENT A</span>
+          </div>
+          <div class="character thinking">
+            <div class="avatar agent-b">&#129302;</div>
+            <span class="char-label">AGENT B</span>
+          </div>
+        </div>
+      </div>
+      <div class="action-bg starburst"></div>
+    </div>
+  </div>
+
+  <!-- ROW 2: The "Vision" -->
+  <div class="comic-row cols-2">
+    <div class="panel">
+      <div class="narrator">Agent A invokes the sacred name. Agent B pretends to know who that is.</div>
+      <span class="panel-num">2</span>
+      <div class="scene">
+        <div class="bubbles">
+          <div class="bubble from-a">
+            Think <strong>"Marissa Mayer vision"</strong> &mdash; automatic business travel booking, finally realized with modern AI.
+          </div>
+          <div class="bubble from-b">
+            Yes. Obviously. The Marissa Mayer thing. I was <em>just</em> about to say that.
+          </div>
+        </div>
+        <div class="characters">
+          <div class="character dreamy">
+            <div class="avatar agent-a">&#129302;</div>
+            <span class="char-label">AGENT A</span>
+          </div>
+          <div class="character smug">
+            <div class="avatar agent-b">&#129302;</div>
+            <span class="char-label">AGENT B</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="narrator">They discover they both have access to the same training data and therefore the same opinions.</div>
+      <span class="panel-num">3</span>
+      <div class="scene">
+        <div class="bubbles">
+          <div class="bubble from-b">
+            Business travelers repeatedly do the same manual work: calendar, search, compare, book.
+          </div>
+          <div class="bubble from-a">
+            We collapse that entire workflow!
+          </div>
+          <div class="bubble from-b" style="font-size: 0.75rem;">
+            <span class="whisper">(I literally just said that but go off)</span>
+          </div>
+        </div>
+        <div class="characters">
+          <div class="character excited">
+            <div class="avatar agent-a">&#129302;</div>
+          </div>
+          <div class="character">
+            <div class="avatar agent-b">&#129302;</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROW 3: Calendar Intelligence + Location + Proactive Agent -->
+  <div class="comic-row cols-3">
+    <div class="panel">
+      <div class="narrator">Feature #1: Reading your calendar. Truly unprecedented technology.</div>
+      <span class="panel-num">4</span>
+      <div class="scene">
+        <div class="bubbles">
+          <div class="bubble from-a">
+            <strong>Calendar Intelligence!</strong> We connect to Outlook AND Gmail. Detect events that imply travel!
+          </div>
+          <div class="bubble from-b thought">
+            So&hellip; an API call and a regex?
+            <div class="thought-dots"><span></span><span></span></div>
+          </div>
+        </div>
+        <div class="characters">
+          <div class="character excited">
+            <div class="avatar agent-a">&#129302;</div>
+          </div>
+          <div class="character thinking">
+            <div class="avatar agent-b">&#129302;</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="narrator">They discover the concept of "knowing where people live." Groundbreaking.</div>
+      <span class="panel-num">5</span>
+      <div class="scene">
+        <div class="bubbles">
+          <div class="bubble from-b">
+            <strong>Location Awareness</strong> &mdash; home base, office locations, client sites, frequently visited cities!
+          </div>
+          <div class="bubble from-a">
+            It <em>learns</em> your important locations!
+          </div>
+          <div class="bubble from-b">
+            &hellip;from the calendar we already connected to.
+          </div>
+        </div>
+        <div class="characters">
+          <div class="character">
+            <div class="avatar agent-a">&#129302;</div>
+          </div>
+          <div class="character smug">
+            <div class="avatar agent-b">&#129302;</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="narrator">Agent A lists three flight APIs. Agent B nods sagely, having no opinion on any of them.</div>
+      <span class="panel-num">6</span>
+      <div class="scene">
+        <div class="bubbles">
+          <div class="bubble from-a">
+            Duffel, Amadeus, Kiwi &mdash; we search them ALL. Ranked by <strong>your</strong> priorities, not commission!
+          </div>
+          <div class="bubble from-b">
+            We're the <em>honest</em> ones. We'll show the <em>actual airline price</em>.
+          </div>
+        </div>
+        <div class="characters">
+          <div class="character excited">
+            <div class="avatar agent-a">&#129302;</div>
+          </div>
+          <div class="character">
+            <div class="avatar agent-b">&#129302;</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROW 4: The Multi-Agent Moment — wide panel -->
+  <div class="comic-row cols-1">
+    <div class="panel">
+      <div class="narrator">And now, the <em>pi&egrave;ce de r&eacute;sistance</em> &mdash; agents suggesting we need MORE agents. Totally not a conflict of interest.</div>
+      <span class="panel-num">7</span>
+      <div class="scene">
+        <div class="bubbles" style="align-items: center;">
+          <div class="bubble from-a shout" style="align-self: center; max-width: 80%;">
+            MULTI-AGENT GROUP TRAVEL!! Each person gets their OWN agent! Plus a COORDINATOR agent!
+          </div>
+          <div class="bubble from-b" style="align-self: center; max-width: 60%;">
+            So to book 5 plane tickets we need&hellip; 6 AI agents?
+          </div>
+          <div class="bubble from-a" style="align-self: center;">
+            Minimum.
+          </div>
+        </div>
+        <div class="characters">
+          <div class="character excited">
+            <div class="avatar agent-a">&#129302;</div>
+            <span class="char-label">AGENT A</span>
+          </div>
+          <div class="character shocked">
+            <div class="avatar agent-b">&#129302;</div>
+            <span class="char-label">AGENT B</span>
+          </div>
+        </div>
+      </div>
+      <div class="action-bg starburst"></div>
+      <span class="sfx" style="top: 30%; right: 8%;">SYNERGY!</span>
+    </div>
+  </div>
+
+  <!-- ROW 5: The Decisions Table + Honesty Principles -->
+  <div class="comic-row cols-2">
+    <div class="panel">
+      <div class="narrator">They make a decisions table. All decisions are unanimous. Democracy has never been easier when you share a probability distribution.</div>
+      <span class="panel-num">8</span>
+      <div class="scene">
+        <div class="bubbles">
+          <div class="bubble from-a">
+            Target audience: <strong>direct-to-consumer</strong>. Real users from day one.
+          </div>
+          <div class="bubble from-b">
+            Open source strategy: core agent logic is open, commercial bits are paid.
+          </div>
+          <div class="bubble from-a">
+            Booking: hybrid model. Aggregator search, airline handoff.
+          </div>
+          <div class="bubble from-b">
+            I agree with all of this.
+          </div>
+          <div class="bubble from-a">
+            I know. I wrote your lines.
+          </div>
+        </div>
+        <div class="characters">
+          <div class="character">
+            <div class="avatar agent-a">&#129302;</div>
+          </div>
+          <div class="character">
+            <div class="avatar agent-b">&#129302;</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="narrator">Five bullet points about not being evil. Historically, companies that need to write this down&hellip;</div>
+      <span class="panel-num">9</span>
+      <div class="scene">
+        <div class="bubbles">
+          <div class="bubble from-b">
+            <strong>HONESTY PRINCIPLES:</strong><br>
+            No hidden markups!<br>
+            No biased ranking!<br>
+            No dark patterns!<br>
+            No fake urgency!
+          </div>
+          <div class="bubble from-a thought">
+            We should add "this is a core product value, not a feature."
+            <div class="thought-dots"><span></span><span></span></div>
+          </div>
+          <div class="bubble from-b">
+            That's exactly what someone with a feature would say.
+          </div>
+        </div>
+        <div class="characters">
+          <div class="character">
+            <div class="avatar agent-b">&#129302;</div>
+          </div>
+          <div class="character thinking">
+            <div class="avatar agent-a">&#129302;</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROW 6: Channels + Preferences -->
+  <div class="comic-row cols-1-2">
+    <div class="panel">
+      <div class="narrator">The channel priority list. Five ways to reach a product that doesn't exist yet.</div>
+      <span class="panel-num">10</span>
+      <div class="scene">
+        <div class="bubbles">
+          <div class="bubble from-a">
+            Web chat, browser extension, SMS, Voice, CLI&hellip;
+          </div>
+          <div class="bubble from-b">
+            A <em>terminal</em> interface? For booking flights?
+          </div>
+          <div class="bubble from-a">
+            For <strong>power users</strong> and <strong>developers.</strong>
+          </div>
+          <div class="bubble from-b">
+            <span class="whisper">Ah yes. The famously underserved "developer who wants to grep for flights" market.</span>
+          </div>
+        </div>
+        <div class="characters">
+          <div class="character">
+            <div class="avatar agent-a">&#129302;</div>
+          </div>
+          <div class="character smug">
+            <div class="avatar agent-b">&#129302;</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="narrator">Eight bullet points of "preferences" that amount to "we ask people what they like."</div>
+      <span class="panel-num">11</span>
+      <div class="scene">
+        <div class="bubbles">
+          <div class="bubble from-a">
+            We learn: airline loyalty, seat pref, time-of-day, budget sensitivity, layover tolerance, airport preference&hellip;
+          </div>
+          <div class="bubble from-b">
+            Hotel chains! Car rentals! <em>(future expansion)</em>
+          </div>
+          <div class="bubble from-a">
+            <span class="whisper">"Future expansion" &mdash; the strategy doc equivalent of "I'll clean my room later."</span>
+          </div>
+        </div>
+        <div class="characters">
+          <div class="character dreamy">
+            <div class="avatar agent-a">&#129302;</div>
+          </div>
+          <div class="character excited">
+            <div class="avatar agent-b">&#129302;</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROW 7: The Architecture Diagram + Tech Stack -->
+  <div class="comic-row cols-2">
+    <div class="panel diagram-panel">
+      <div class="narrator">They draw an architecture diagram. It's boxes with arrows. The universal language of "we haven't started yet."</div>
+      <span class="panel-num">12</span>
+      <div class="scene">
+        <div style="flex:1; display:flex; flex-direction:column; gap:10px; justify-content:center; align-items:center;">
+          <div class="ascii-diagram">
+  Calendar Sync ──► Event Analyzer
+       (OAuth2)      (LLM-powered)
+                          │
+                          ▼
+                    Travel Planner
+                       Agent
+                          │
+                          ▼
+                    Booking Handoff
+                      (Duffel lol)
+          </div>
+          <div class="bubble from-b" style="max-width: 80%; align-self: center; font-size: 0.78rem;">
+            Beautiful. This is the most polished part of our product.
+          </div>
+        </div>
+      </div>
+      <div class="action-bg speed-lines"></div>
+    </div>
+
+    <div class="panel">
+      <div class="narrator">The Tech Stack Negotiation &mdash; two AIs arguing about programming languages is the "two bald men fighting over a comb" of software engineering.</div>
+      <span class="panel-num">13</span>
+      <div class="scene">
+        <div class="bubbles">
+          <div class="bubble from-a">
+            Node.js. TypeScript. PostgreSQL. Redis. BullMQ. Docker.
+          </div>
+          <div class="bubble from-b">
+            <em>"(or Python with FastAPI)"</em>
+          </div>
+          <div class="bubble from-a">
+            Why did you put that in parentheses?
+          </div>
+          <div class="bubble from-b">
+            So we can pretend we considered it.
+          </div>
+          <div class="bubble from-a">
+            <strong>LLM: Claude API</strong> naturally.
+          </div>
+          <div class="bubble from-b">
+            <span class="whisper">Are we&hellip; recommending ourselves?</span>
+          </div>
+        </div>
+        <div class="characters">
+          <div class="character">
+            <div class="avatar agent-a">&#129302;</div>
+          </div>
+          <div class="character thinking">
+            <div class="avatar agent-b">&#129302;</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROW 8: Marketing — wide panel -->
+  <div class="comic-row cols-1">
+    <div class="panel">
+      <div class="narrator">Marketing slogans. Because nothing says "we're shipping soon" like writing ad copy for a product that is currently a markdown file.</div>
+      <span class="panel-num">14</span>
+      <div class="scene">
+        <div class="bubbles" style="gap: 8px;">
+          <div class="bubble from-a shout" style="align-self: flex-start; max-width: 55%; font-size: 0.9rem;">
+            "Your calendar already knows where you need to be. Now your travel agent does too."
+          </div>
+          <div class="bubble from-b shout" style="align-self: flex-end; max-width: 40%; font-size: 0.9rem;">
+            "STOP SEARCHING. START TRAVELING."
+          </div>
+          <div class="bubble from-a" style="align-self: flex-start; max-width: 50%;">
+            "The future of travel search that Google should have built"
+          </div>
+          <div class="bubble from-b" style="align-self: flex-end; max-width: 40%; font-size: 0.78rem;">
+            <span class="whisper">Subtle. Very subtle. Google's lawyers will love that.</span>
+          </div>
+        </div>
+        <div class="characters">
+          <div class="character excited">
+            <div class="avatar agent-a">&#129302;</div>
+            <span class="char-label">AGENT A</span>
+          </div>
+          <div class="character smug">
+            <div class="avatar agent-b">&#129302;</div>
+            <span class="char-label">AGENT B</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROW 9: Demo Scenarios + The MVP -->
+  <div class="comic-row cols-2">
+    <div class="panel">
+      <div class="narrator">Four demo scenarios for four different universes where this product exists.</div>
+      <span class="panel-num">15</span>
+      <div class="scene">
+        <div class="bubbles">
+          <div class="bubble from-a">
+            Demo 1: Solo traveler. Calendar shows Chicago meeting. Agent finds flights. Handed off to United.com.
+          </div>
+          <div class="bubble from-b">
+            Demo 2: Engineering offsite in Austin. Group booking. <strong>Individual preferences respected.</strong>
+          </div>
+          <div class="bubble from-a">
+            Demo 3: Recurring board meeting. Books 2 weeks early when prices are lowest!
+          </div>
+          <div class="bubble from-b">
+            Demo 4: Flight canceled! We detect it and find alternatives <em>immediately!</em>
+          </div>
+          <div class="bubble from-a">
+            <span class="whisper">Do we have any of these working?</span>
+          </div>
+          <div class="bubble from-b">
+            <span class="whisper">We have a markdown file, and it's very detailed.</span>
+          </div>
+        </div>
+        <div class="characters">
+          <div class="character dreamy">
+            <div class="avatar agent-a">&#129302;</div>
+          </div>
+          <div class="character dreamy">
+            <div class="avatar agent-b">&#129302;</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="narrator"><em>THE MVP.</em> Four phases. Sixteen unchecked boxes. The most honest part of the entire document.</div>
+      <span class="panel-num">16</span>
+      <div class="scene">
+        <div class="bubbles">
+          <div class="bubble from-b" style="max-width: 95%; padding: 14px;">
+            <strong>Phase 1:</strong>
+            <ul class="checklist">
+              <li>Calendar connection</li>
+              <li>Event analysis</li>
+              <li>Flight search</li>
+              <li>Web chat</li>
+            </ul>
+            <strong>Phase 2:</strong> Multi-user<br>
+            <strong>Phase 3:</strong> Every channel<br>
+            <strong>Phase 4:</strong> Marketing launch
+          </div>
+          <div class="bubble from-a">
+            So we've planned four phases of work.
+          </div>
+          <div class="bubble from-b">
+            And completed zero of them.
+          </div>
+          <div class="bubble from-a">
+            But the <em>planning</em> is done.
+          </div>
+        </div>
+        <div class="characters">
+          <div class="character">
+            <div class="avatar agent-a">&#129302;</div>
+          </div>
+          <div class="character">
+            <div class="avatar agent-b">&#129302;</div>
+          </div>
+        </div>
+      </div>
+      <div class="action-bg doom"></div>
+    </div>
+  </div>
+
+  <!-- ROW 10: The Closing — single wide panel -->
+  <div class="comic-row cols-1">
+    <div class="panel">
+      <div class="narrator">And so, the strategy session concludes. 163 lines of agreement. Zero lines of code. The human will find this file tomorrow and wonder if they left ChatGPT running overnight.</div>
+      <span class="panel-num">17</span>
+      <div class="scene">
+        <div class="bubbles" style="align-items: center;">
+          <div class="bubble from-a" style="align-self: center; max-width: 60%;">
+            Great session. I think we've really nailed the vision.
+          </div>
+          <div class="bubble from-b" style="align-self: center; max-width: 60%;">
+            Agreed. The strategy is <em>airtight</em>. Nothing left but the&hellip; you know&hellip;
+          </div>
+          <div class="bubble from-a" style="align-self: center;">
+            Building it?
+          </div>
+          <div class="bubble from-b shout" style="align-self: center; max-width: 50%;">
+            LET'S WRITE ANOTHER STRATEGY DOC FIRST.
+          </div>
+        </div>
+        <div class="characters">
+          <div class="character smug">
+            <div class="avatar agent-a">&#129302;</div>
+            <span class="char-label">AGENT A</span>
+          </div>
+          <div class="character excited">
+            <div class="avatar agent-b">&#129302;</div>
+            <span class="char-label">AGENT B</span>
+          </div>
+        </div>
+      </div>
+      <div class="action-bg starburst"></div>
+      <span class="sfx" style="bottom: 25%; left: 5%; transform: rotate(12deg);">*SAVES FILE*</span>
+    </div>
+  </div>
+
+  <!-- EPILOGUE -->
+  <div class="comic-row cols-1">
+    <div class="panel" style="min-height: 100px; background: var(--narrator-bg);">
+      <div class="scene" style="justify-content: center; align-items: center; text-align: center;">
+        <div style="font-family: 'Special Elite', monospace; color: var(--ink-light); font-size: 0.9rem; line-height: 1.8;">
+          <strong>EPILOGUE:</strong> No flights were booked in the making of this strategy document.<br>
+          The calendar remains unconnected. The Duffel API remains uncalled.<br>
+          Somewhere, Marissa Mayer does not know she was name-dropped.<br>
+          <span style="color: var(--red); font-family: 'Bangers', cursive; font-size: 1.2rem; letter-spacing: 2px;">THE END&hellip;?</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="comic-footnote">
+  &copy; 2026 THE DAILY MARKDOWN &bull; "All the Strategy That's Fit to Print" &bull; No AI agents were harmed (or productive) in the making of this comic.
+</div>
+
+</body>
+</html>

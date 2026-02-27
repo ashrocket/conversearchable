@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Conversearchable — Corporate Services Travel Agent Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Instrument+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,700&display=swap" rel="stylesheet">
+<style>
+  /* ========================================
+     CSS DESIGN SYSTEM
+     ======================================== */
+  :root {
+    --bg-deep: #0a0a0f;
+    --bg-surface: #12121a;
+    --bg-card: #1a1a26;
+    --bg-card-hover: #22222f;
+    --border: #2a2a3a;
+    --border-bright: #3a3a50;
+    --text-primary: #e8e8f0;
+    --text-secondary: #8888a0;
+    --text-dim: #555570;
+    --amber: #f0a030;
+    --amber-dim: #f0a03040;
+    --green: #40c870;
+    --green-dim: #40c87025;
+    --blue: #4088e8;
+    --blue-dim: #4088e825;
+    --purple: #9070e8;
+    --purple-dim: #9070e825;
+    --red: #e84040;
+    --red-dim: #e8404025;
+
+    /* Chat-specific */
+    --chat-user-bg: #2a2a4a;
+    --chat-agent-bg: #1a2a1a;
+
+    /* Fonts */
+    --mono: 'IBM Plex Mono', monospace;
+    --sans: 'Instrument Sans', sans-serif;
+    --display: 'Fraunces', serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg-deep);
+    color: var(--text-primary);
+    font-family: var(--sans);
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow: hidden;
+  }
+
+  /* --- NOISE TEXTURE OVERLAY --- */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* --- SCANLINES --- */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0,0,0,0.03) 2px,
+      rgba(0,0,0,0.03) 4px
+    );
+    pointer-events: none;
+    z-index: 9998;
+  }
+
+  /* ========================================
+     LAYOUT — .demo-wrapper
+     ======================================== */
+  .demo-wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+
+  /* --- HEADER --- */
+  .demo-header {
+    flex-shrink: 0;
+    padding: 20px 32px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    position: relative;
+    background: var(--bg-surface);
+  }
+
+  .demo-header::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 180px;
+    height: 1px;
+    background: var(--amber);
+    box-shadow: 0 0 16px var(--amber-dim);
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .header-logo {
+    font-family: var(--display);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text-primary);
+    letter-spacing: -0.5px;
+  }
+
+  .header-logo span {
+    color: var(--amber);
+  }
+
+  .header-badge {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--amber);
+    background: var(--amber-dim);
+    padding: 3px 10px;
+    border-radius: 2px;
+    border: 1px solid #f0a03050;
+  }
+
+  .header-right {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.5px;
+  }
+
+  /* --- BODY (two panels) --- */
+  .demo-body {
+    flex: 1;
+    display: flex;
+    min-height: 0;
+    position: relative;
+  }
+
+  /* --- CHAT PANEL (60%) --- */
+  .chat-panel {
+    flex: 0 0 60%;
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--border);
+    background: var(--bg-deep);
+    position: relative;
+  }
+
+  .chat-scroll {
+    flex: 1;
+    overflow-y: auto;
+    padding: 28px 32px 20px;
+    scroll-behavior: smooth;
+  }
+
+  .chat-scroll::-webkit-scrollbar {
+    width: 6px;
+  }
+  .chat-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .chat-scroll::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 3px;
+  }
+  .chat-scroll::-webkit-scrollbar-thumb:hover {
+    background: var(--border-bright);
+  }
+
+  /* --- ANNOTATION PANEL (40%) --- */
+  .annotation-panel {
+    flex: 0 0 40%;
+    background: var(--bg-surface);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  .annotation-scroll {
+    flex: 1;
+    overflow-y: auto;
+    padding: 32px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  .annotation-scroll::-webkit-scrollbar {
+    width: 6px;
+  }
+  .annotation-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .annotation-scroll::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 3px;
+  }
+
+  /* Connecting line between panels */
+  .panel-connector {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 1px;
+    background: linear-gradient(to right, var(--border-bright), var(--amber-dim));
+    z-index: 5;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .annotation-panel.active .panel-connector {
+    opacity: 1;
+  }
+
+  /* Annotation card */
+  .annotation-card {
+    width: 100%;
+    max-width: 420px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--amber);
+    border-radius: 4px;
+    padding: 28px;
+    position: sticky;
+    top: 32px;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    /* Needed for ::before glow pseudo-element */
+    overflow: visible;
+  }
+
+  .annotation-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .annotation-step {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .annotation-step::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .annotation-act {
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--amber);
+    background: var(--amber-dim);
+    padding: 2px 8px;
+    border-radius: 2px;
+    margin-bottom: 12px;
+    display: inline-block;
+  }
+
+  .annotation-title {
+    font-family: var(--sans);
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 10px;
+    line-height: 1.35;
+  }
+
+  .annotation-body {
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+
+  .annotation-empty {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-dim);
+    text-align: center;
+    padding: 40px 20px;
+    letter-spacing: 0.5px;
+  }
+
+  /* ========================================
+     CHAT MESSAGE COMPONENTS
+     ======================================== */
+
+  .chat-messages {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  /* --- User Message --- */
+  .msg-user {
+    display: flex;
+    justify-content: flex-end;
+    opacity: 0;
+    transform: translateY(12px);
+    animation: msgIn 0.3s ease forwards;
+  }
+
+  .msg-user .bubble {
+    max-width: 75%;
+    background: var(--chat-user-bg);
+    border: 1px solid #3a3a5a;
+    border-radius: 16px 16px 4px 16px;
+    padding: 12px 18px;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--text-primary);
+  }
+
+  /* --- Agent Message --- */
+  .msg-agent {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    opacity: 0;
+    transform: translateY(12px);
+    animation: msgIn 0.3s ease forwards;
+  }
+
+  .agent-avatar {
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--green-dim);
+    border: 1.5px solid var(--green);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--green);
+    margin-top: 2px;
+  }
+
+  .msg-agent .bubble {
+    max-width: 75%;
+    background: var(--chat-agent-bg);
+    border: 1px solid #2a3a2a;
+    border-radius: 16px 16px 16px 4px;
+    padding: 12px 18px;
+    font-size: 14px;
+    line-height: 1.55;
+    color: var(--text-primary);
+  }
+
+  .msg-agent .bubble .rich-content {
+    margin-top: 10px;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  /* --- System Message --- */
+  .msg-system {
+    text-align: center;
+    padding: 8px 0;
+    opacity: 0;
+    transform: translateY(12px);
+    animation: msgIn 0.3s ease forwards;
+  }
+
+  .msg-system .system-text {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.5px;
+    background: var(--bg-surface);
+    padding: 4px 14px;
+    border-radius: 10px;
+    display: inline-block;
+    border: 1px solid var(--border);
+  }
+
+  /* --- Typing Indicator --- */
+  .msg-typing {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    opacity: 0;
+    transform: translateY(12px);
+    animation: msgIn 0.3s ease forwards;
+  }
+
+  .msg-typing .bubble {
+    background: var(--chat-agent-bg);
+    border: 1px solid #2a3a2a;
+    border-radius: 16px 16px 16px 4px;
+    padding: 14px 20px;
+  }
+
+  .typing-dots {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+  }
+
+  .typing-dot {
+    width: 7px;
+    height: 7px;
+    background: var(--green);
+    border-radius: 50%;
+    opacity: 0.4;
+    animation: typingBounce 1.4s ease-in-out infinite;
+  }
+
+  .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+  .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes typingBounce {
+    0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+    30% { transform: translateY(-6px); opacity: 1; }
+  }
+
+  @keyframes msgIn {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Step divider in chat */
+  .step-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 0 10px;
+    opacity: 0;
+    animation: msgIn 0.3s ease forwards;
+  }
+
+  .step-divider::before,
+  .step-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .step-divider-label {
+    font-family: var(--mono);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    white-space: nowrap;
+  }
+
+  /* ========================================
+     CONTROLS BAR
+     ======================================== */
+  .demo-controls {
+    flex-shrink: 0;
+    background: var(--bg-surface);
+    border-top: 1px solid var(--border);
+    padding: 0;
+    position: relative;
+  }
+
+  /* Progress bar */
+  .progress-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: var(--amber);
+    box-shadow: 0 0 12px var(--amber-dim);
+    transition: width 0.5s ease;
+    border-radius: 0 2px 2px 0;
+  }
+
+  .controls-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 28px;
+    gap: 16px;
+  }
+
+  .controls-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .controls-center {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .controls-right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  /* Mode toggle */
+  .mode-toggle {
+    display: flex;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .mode-btn {
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    background: transparent;
+    color: var(--text-dim);
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .mode-btn.active {
+    background: var(--amber-dim);
+    color: var(--amber);
+  }
+
+  .mode-btn:hover:not(.active) {
+    color: var(--text-secondary);
+  }
+
+  /* Control buttons */
+  .ctrl-btn {
+    font-family: var(--mono);
+    font-size: 13px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all 0.15s;
+    padding: 0;
+  }
+
+  .ctrl-btn:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--border-bright);
+    color: var(--text-primary);
+  }
+
+  .ctrl-btn:active {
+    transform: scale(0.95);
+  }
+
+  .ctrl-btn.primary {
+    width: 42px;
+    height: 42px;
+    background: var(--amber-dim);
+    border-color: #f0a03050;
+    color: var(--amber);
+  }
+
+  .ctrl-btn.primary:hover {
+    background: #f0a03035;
+    border-color: var(--amber);
+  }
+
+  .ctrl-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  .ctrl-btn:disabled:hover {
+    background: var(--bg-card);
+    border-color: var(--border);
+    color: var(--text-secondary);
+    transform: none;
+  }
+
+  /* Step indicator */
+  .step-indicator {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-dim);
+    letter-spacing: 0.5px;
+    min-width: 50px;
+    text-align: center;
+  }
+
+  .step-indicator .current {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+
+  /* Keyboard hint */
+  .kbd-hints {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .kbd {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 2px;
+    padding: 1px 5px;
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+  }
+
+  /* ========================================
+     RESPONSIVE
+     ======================================== */
+  @media (max-width: 900px) {
+    .demo-body {
+      flex-direction: column;
+    }
+
+    .chat-panel {
+      flex: 0 0 55%;
+      border-right: none;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .annotation-panel {
+      flex: 1;
+    }
+
+    .panel-connector {
+      display: none;
+    }
+
+    .demo-header {
+      padding: 14px 20px;
+    }
+
+    .header-right {
+      display: none;
+    }
+
+    .chat-scroll {
+      padding: 20px;
+    }
+
+    .annotation-scroll {
+      padding: 20px;
+    }
+
+    .controls-inner {
+      padding: 10px 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .kbd-hints {
+      display: none;
+    }
+  }
+
+  /* ========================================
+     ANIMATIONS
+     ======================================== */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Subtle glow behind active annotation card */
+  .annotation-card.visible::before {
+    content: '';
+    position: absolute;
+    top: -1px;
+    left: -4px;
+    bottom: -1px;
+    width: 3px;
+    background: var(--amber);
+    box-shadow: 0 0 14px var(--amber-dim), 0 0 28px #f0a03015;
+    border-radius: 2px 0 0 2px;
+  }
+</style>
+</head>
+<body>
+<div class="demo-wrapper">
+
+  <!-- ========== HEADER ========== -->
+  <header class="demo-header">
+    <div class="header-left">
+      <div class="header-logo">Conver<span>searchable</span></div>
+      <div class="header-badge">Prototype</div>
+    </div>
+    <div class="header-right">Corporate Services Travel Agent &mdash; 12-Step Demo</div>
+  </header>
+
+  <!-- ========== BODY ========== -->
+  <div class="demo-body">
+
+    <!-- Chat Panel -->
+    <div class="chat-panel">
+      <div class="chat-scroll" id="chatScroll">
+        <div class="chat-messages" id="chatMessages">
+          <!-- Messages rendered here by DemoEngine -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Annotation Panel -->
+    <div class="annotation-panel" id="annotationPanel">
+      <div class="panel-connector"></div>
+      <div class="annotation-scroll">
+        <div id="annotationContainer">
+          <div class="annotation-empty" id="annotationEmpty">
+            Press play to begin the demo
+          </div>
+          <div class="annotation-card" id="annotationCard">
+            <div class="annotation-step" id="annotationStep">STEP 1 OF 12</div>
+            <div class="annotation-act" id="annotationAct">DISCOVERY</div>
+            <h3 class="annotation-title" id="annotationTitle"></h3>
+            <p class="annotation-body" id="annotationBody"></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ========== CONTROLS ========== -->
+  <div class="demo-controls">
+    <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+    <div class="controls-inner">
+
+      <div class="controls-left">
+        <div class="mode-toggle">
+          <button class="mode-btn active" id="modeAuto" data-mode="auto">Auto</button>
+          <button class="mode-btn" id="modeStep" data-mode="step">Step</button>
+        </div>
+      </div>
+
+      <div class="controls-center">
+        <button class="ctrl-btn" id="btnBack" title="Previous step" disabled>&larr;</button>
+        <button class="ctrl-btn primary" id="btnPlayPause" title="Play / Pause">&#9654;</button>
+        <button class="ctrl-btn" id="btnNext" title="Next step">&rarr;</button>
+        <button class="ctrl-btn" id="btnSkip" title="Skip to end">&#9654;&#9654;</button>
+      </div>
+
+      <div class="controls-right">
+        <div class="step-indicator">
+          <span class="current" id="stepCurrent">0</span> / <span id="stepTotal">3</span>
+        </div>
+        <div class="kbd-hints">
+          <span><span class="kbd">&larr;</span> <span class="kbd">&rarr;</span> nav</span>
+          <span><span class="kbd">space</span> play</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- ========================================
+     DEMO ENGINE + DATA
+     ======================================== -->
+<script>
+(function() {
+  'use strict';
+
+  // ============================================================
+  // DEMO STEPS DATA
+  // ============================================================
+  const DEMO_STEPS = [
+    {
+      id: 1,
+      act: 'Discovery',
+      messages: [
+        { type: 'user', text: 'Conference season is coming up. What do we have on the calendar for Q4?' },
+        { type: 'system', text: 'Scanning Google Calendar...', delay: 400 },
+        { type: 'typing', duration: 1500 },
+        { type: 'agent', text: 'I found 4 industry conferences on your team calendar for Oct\u2013Nov 2026.' },
+      ],
+      annotation: {
+        title: 'Calendar Scan',
+        body: 'Works like asking your travel coordinator to check the schedule \u2014 Conversearchable reads your shared calendar and cross-references industry conference databases.',
+      },
+      autoAdvanceDelay: 3000,
+    },
+    {
+      id: 2,
+      act: 'Discovery',
+      messages: [
+        { type: 'agent', text: 'Are we attending all four, or should I focus on specific ones?' },
+        { type: 'user', text: 'All four. SaaStr and Gartner are the big ones \u2014 some people will do both back to back.', delay: 800 },
+      ],
+      annotation: {
+        title: 'Prioritization',
+        body: 'The agent tracks priorities so it can optimize spend \u2014 premium bookings for must-attend events, economy for optional ones.',
+      },
+      autoAdvanceDelay: 3000,
+    },
+    {
+      id: 3,
+      act: 'Discovery',
+      messages: [
+        { type: 'agent', text: 'Great. Who from the team is attending each conference?' },
+        {
+          type: 'agent-rich',
+          text: 'Here\u2019s what I have so far from registration data and Slack threads:',
+          html: '<div style="padding:20px;background:rgba(255,255,255,0.05);border-radius:8px;text-align:center;color:var(--text-dim);font-family:var(--mono);font-size:12px;letter-spacing:0.5px;border:1px dashed var(--border)">[Team Roster Component \u2014 Coming in Batch 2]</div>',
+          delay: 600,
+        },
+      ],
+      annotation: {
+        title: 'Team Assembly',
+        body: 'Your CSTA knows who\u2019s been to what before, who\u2019s expressed interest, and who\u2019s already registered \u2014 pre-populates suggestions from past attendance and Slack mentions.',
+      },
+      autoAdvanceDelay: 4000,
+    },
+  ];
+
+  // ============================================================
+  // DEMO ENGINE
+  // ============================================================
+  class DemoEngine {
+    constructor() {
+      // State
+      this.currentStep = -1;
+      this.isPlaying = false;
+      this.mode = 'auto'; // 'auto' | 'step'
+      this.totalSteps = DEMO_STEPS.length;
+      this._autoTimer = null;
+      this._messageQueue = [];
+      this._queueRunning = false;
+      this._abortQueue = false;
+
+      // DOM refs
+      this.chatMessages = document.getElementById('chatMessages');
+      this.chatScroll = document.getElementById('chatScroll');
+      this.annotationPanel = document.getElementById('annotationPanel');
+      this.annotationCard = document.getElementById('annotationCard');
+      this.annotationEmpty = document.getElementById('annotationEmpty');
+      this.annotationStep = document.getElementById('annotationStep');
+      this.annotationAct = document.getElementById('annotationAct');
+      this.annotationTitle = document.getElementById('annotationTitle');
+      this.annotationBody = document.getElementById('annotationBody');
+      this.progressBar = document.getElementById('progressBar');
+      this.stepCurrent = document.getElementById('stepCurrent');
+      this.stepTotal = document.getElementById('stepTotal');
+      this.btnBack = document.getElementById('btnBack');
+      this.btnPlayPause = document.getElementById('btnPlayPause');
+      this.btnNext = document.getElementById('btnNext');
+      this.btnSkip = document.getElementById('btnSkip');
+      this.modeAuto = document.getElementById('modeAuto');
+      this.modeStep = document.getElementById('modeStep');
+
+      // Init
+      this.stepTotal.textContent = this.totalSteps;
+      this._bindEvents();
+      this._updateUI();
+    }
+
+    // --- Public API ---
+
+    play() {
+      if (this.isPlaying) return;
+      this.isPlaying = true;
+      this._updateUI();
+      if (this.currentStep < 0) {
+        // Haven't started yet — begin from step 0
+        this.nextStep();
+      } else if (this.currentStep < this.totalSteps - 1) {
+        if (this.mode === 'auto' && !this._queueRunning) {
+          // Resuming auto-play after pause — schedule next step
+          const step = DEMO_STEPS[this.currentStep];
+          this._autoTimer = setTimeout(() => {
+            if (this.isPlaying) this.nextStep();
+          }, step.autoAdvanceDelay || 3000);
+        } else if (!this._queueRunning) {
+          this.nextStep();
+        }
+        // If queue is still running, auto-advance will fire naturally when it finishes
+      }
+    }
+
+    pause() {
+      this.isPlaying = false;
+      this._clearAutoTimer();
+      this._updateUI();
+    }
+
+    togglePlayPause() {
+      if (this.isPlaying) {
+        this.pause();
+      } else {
+        this.play();
+      }
+    }
+
+    async nextStep() {
+      const nextIdx = this.currentStep + 1;
+      if (nextIdx >= this.totalSteps) {
+        this.pause();
+        return;
+      }
+      await this.playStep(nextIdx);
+    }
+
+    async prevStep() {
+      if (this.currentStep <= 0) return;
+      // Re-render from scratch up to previous step
+      this._abortCurrentQueue();
+      const target = this.currentStep - 1;
+      this.chatMessages.innerHTML = '';
+      this.currentStep = -1;
+      for (let i = 0; i <= target; i++) {
+        await this._renderStepInstant(i);
+      }
+      this.currentStep = target;
+      this._updateAnnotation(target);
+      this._updateUI();
+      this._scrollToBottom();
+    }
+
+    async playStep(index) {
+      if (index < 0 || index >= this.totalSteps) return;
+      this._clearAutoTimer();
+      this._abortCurrentQueue();
+
+      const step = DEMO_STEPS[index];
+      this.currentStep = index;
+
+      // Update annotation
+      this._updateAnnotation(index);
+      this._updateUI();
+
+      // Add step divider if not the first step
+      if (index > 0) {
+        this._addStepDivider(index);
+      }
+
+      // Process message queue with delays
+      await this._processMessages(step.messages);
+
+      // Auto-advance if in auto mode and playing
+      if (this.isPlaying && this.mode === 'auto' && this.currentStep < this.totalSteps - 1) {
+        this._autoTimer = setTimeout(() => {
+          if (this.isPlaying) {
+            this.nextStep();
+          }
+        }, step.autoAdvanceDelay || 3000);
+      } else if (this.currentStep >= this.totalSteps - 1) {
+        this.pause();
+      }
+    }
+
+    skipToEnd() {
+      this._abortCurrentQueue();
+      this._clearAutoTimer();
+      this.pause();
+      this.chatMessages.innerHTML = '';
+      this.currentStep = -1;
+      for (let i = 0; i < this.totalSteps; i++) {
+        this._renderStepInstant(i);
+      }
+      this.currentStep = this.totalSteps - 1;
+      this._updateAnnotation(this.currentStep);
+      this._updateUI();
+      this._scrollToBottom();
+    }
+
+    reset() {
+      this._abortCurrentQueue();
+      this._clearAutoTimer();
+      this.pause();
+      this.chatMessages.innerHTML = '';
+      this.currentStep = -1;
+      this._hideAnnotation();
+      this._updateUI();
+    }
+
+    setMode(mode) {
+      this.mode = mode;
+      this.modeAuto.classList.toggle('active', mode === 'auto');
+      this.modeStep.classList.toggle('active', mode === 'step');
+      if (mode === 'step') {
+        this._clearAutoTimer();
+      }
+    }
+
+    // --- Private: Message Rendering ---
+
+    async _processMessages(messages) {
+      this._queueRunning = true;
+      this._abortQueue = false;
+
+      for (const msg of messages) {
+        if (this._abortQueue) break;
+
+        const delay = msg.delay || 0;
+        if (delay > 0) {
+          await this._wait(delay);
+          if (this._abortQueue) break;
+        }
+
+        if (msg.type === 'typing') {
+          const typingEl = this._addTypingIndicator();
+          this._scrollToBottom();
+          await this._wait(msg.duration || 1500);
+          if (typingEl && typingEl.parentNode) {
+            typingEl.remove();
+          }
+        } else if (msg.type === 'user') {
+          this._addUserMessage(msg.text);
+          this._scrollToBottom();
+          await this._wait(300);
+        } else if (msg.type === 'agent') {
+          this._addAgentMessage(msg.text);
+          this._scrollToBottom();
+          await this._wait(300);
+        } else if (msg.type === 'agent-rich') {
+          this._addAgentRichMessage(msg.text, msg.html);
+          this._scrollToBottom();
+          await this._wait(300);
+        } else if (msg.type === 'system') {
+          this._addSystemMessage(msg.text);
+          this._scrollToBottom();
+          await this._wait(200);
+        }
+      }
+
+      this._queueRunning = false;
+    }
+
+    _renderStepInstant(index) {
+      const step = DEMO_STEPS[index];
+      if (index > 0) {
+        this._addStepDivider(index, true);
+      }
+      for (const msg of step.messages) {
+        if (msg.type === 'typing') continue; // skip typing in instant mode
+        if (msg.type === 'user') this._addUserMessage(msg.text, true);
+        else if (msg.type === 'agent') this._addAgentMessage(msg.text, true);
+        else if (msg.type === 'agent-rich') this._addAgentRichMessage(msg.text, msg.html, true);
+        else if (msg.type === 'system') this._addSystemMessage(msg.text, true);
+      }
+    }
+
+    _addUserMessage(text, instant) {
+      const div = document.createElement('div');
+      div.className = 'msg-user';
+      if (instant) div.style.animation = 'none';
+      if (instant) { div.style.opacity = '1'; div.style.transform = 'none'; }
+      div.innerHTML = '<div class="bubble"></div>';
+      div.querySelector('.bubble').textContent = text;
+      this.chatMessages.appendChild(div);
+      return div;
+    }
+
+    _addAgentMessage(text, instant) {
+      const div = document.createElement('div');
+      div.className = 'msg-agent';
+      if (instant) div.style.animation = 'none';
+      if (instant) { div.style.opacity = '1'; div.style.transform = 'none'; }
+      div.innerHTML = `
+        <div class="agent-avatar">C</div>
+        <div class="bubble"></div>
+      `;
+      div.querySelector('.bubble').textContent = text;
+      this.chatMessages.appendChild(div);
+      return div;
+    }
+
+    _addAgentRichMessage(text, html, instant) {
+      const div = document.createElement('div');
+      div.className = 'msg-agent';
+      if (instant) div.style.animation = 'none';
+      if (instant) { div.style.opacity = '1'; div.style.transform = 'none'; }
+      const bubbleContent = text
+        ? `<span class="bubble-text"></span><div class="rich-content">${html}</div>`
+        : `<div class="rich-content">${html}</div>`;
+      div.innerHTML = `
+        <div class="agent-avatar">C</div>
+        <div class="bubble">${bubbleContent}</div>
+      `;
+      if (text) {
+        div.querySelector('.bubble-text').textContent = text;
+      }
+      this.chatMessages.appendChild(div);
+      return div;
+    }
+
+    _addSystemMessage(text, instant) {
+      const div = document.createElement('div');
+      div.className = 'msg-system';
+      if (instant) div.style.animation = 'none';
+      if (instant) { div.style.opacity = '1'; div.style.transform = 'none'; }
+      div.innerHTML = '<span class="system-text"></span>';
+      div.querySelector('.system-text').textContent = text;
+      this.chatMessages.appendChild(div);
+      return div;
+    }
+
+    _addTypingIndicator() {
+      const div = document.createElement('div');
+      div.className = 'msg-typing';
+      div.innerHTML = `
+        <div class="agent-avatar">C</div>
+        <div class="bubble">
+          <div class="typing-dots">
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+            <div class="typing-dot"></div>
+          </div>
+        </div>
+      `;
+      this.chatMessages.appendChild(div);
+      return div;
+    }
+
+    _addStepDivider(index, instant) {
+      const div = document.createElement('div');
+      div.className = 'step-divider';
+      if (instant) div.style.animation = 'none';
+      if (instant) { div.style.opacity = '1'; div.style.transform = 'none'; }
+      const step = DEMO_STEPS[index];
+      div.innerHTML = `<span class="step-divider-label">Step ${step.id}</span>`;
+      this.chatMessages.appendChild(div);
+    }
+
+    // --- Private: Annotation ---
+
+    _updateAnnotation(index) {
+      const step = DEMO_STEPS[index];
+      if (!step || !step.annotation) return;
+
+      // Hide empty message
+      this.annotationEmpty.style.display = 'none';
+      this.annotationPanel.classList.add('active');
+
+      // Fade out
+      this.annotationCard.classList.remove('visible');
+
+      // Small delay for fade transition
+      setTimeout(() => {
+        this.annotationStep.textContent = `STEP ${step.id} OF ${this.totalSteps}`;
+        this.annotationAct.textContent = step.act || '';
+        this.annotationTitle.textContent = step.annotation.title;
+        this.annotationBody.textContent = step.annotation.body;
+        this.annotationCard.classList.add('visible');
+      }, 150);
+    }
+
+    _hideAnnotation() {
+      this.annotationCard.classList.remove('visible');
+      this.annotationPanel.classList.remove('active');
+      this.annotationEmpty.style.display = 'block';
+    }
+
+    // --- Private: UI Updates ---
+
+    _updateUI() {
+      // Step counter
+      this.stepCurrent.textContent = Math.max(0, this.currentStep + 1);
+
+      // Progress bar
+      const pct = this.totalSteps > 0
+        ? ((this.currentStep + 1) / this.totalSteps) * 100
+        : 0;
+      this.progressBar.style.width = (this.currentStep < 0 ? 0 : pct) + '%';
+
+      // Play/pause icon
+      this.btnPlayPause.innerHTML = this.isPlaying ? '&#9646;&#9646;' : '&#9654;';
+
+      // Button states
+      this.btnBack.disabled = this.currentStep <= 0;
+      this.btnNext.disabled = this.currentStep >= this.totalSteps - 1;
+      this.btnSkip.disabled = this.currentStep >= this.totalSteps - 1;
+    }
+
+    _scrollToBottom() {
+      requestAnimationFrame(() => {
+        this.chatScroll.scrollTop = this.chatScroll.scrollHeight;
+      });
+    }
+
+    // --- Private: Timers ---
+
+    _wait(ms) {
+      return new Promise(resolve => {
+        const timer = setTimeout(resolve, ms);
+        this._messageQueue.push(timer);
+      });
+    }
+
+    _clearAutoTimer() {
+      if (this._autoTimer) {
+        clearTimeout(this._autoTimer);
+        this._autoTimer = null;
+      }
+    }
+
+    _abortCurrentQueue() {
+      this._abortQueue = true;
+      for (const t of this._messageQueue) {
+        clearTimeout(t);
+      }
+      this._messageQueue = [];
+      // Remove any lingering typing indicators
+      const typings = this.chatMessages.querySelectorAll('.msg-typing');
+      typings.forEach(el => el.remove());
+    }
+
+    // --- Events ---
+
+    _bindEvents() {
+      // Play/Pause
+      this.btnPlayPause.addEventListener('click', () => this.togglePlayPause());
+
+      // Next / Back
+      this.btnNext.addEventListener('click', () => this.nextStep());
+      this.btnBack.addEventListener('click', () => this.prevStep());
+
+      // Skip
+      this.btnSkip.addEventListener('click', () => this.skipToEnd());
+
+      // Mode toggles
+      this.modeAuto.addEventListener('click', () => this.setMode('auto'));
+      this.modeStep.addEventListener('click', () => this.setMode('step'));
+
+      // Keyboard shortcuts
+      document.addEventListener('keydown', (e) => {
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+        switch (e.code) {
+          case 'Space':
+            e.preventDefault();
+            this.togglePlayPause();
+            break;
+          case 'ArrowRight':
+            e.preventDefault();
+            this.nextStep();
+            break;
+          case 'ArrowLeft':
+            e.preventDefault();
+            this.prevStep();
+            break;
+        }
+      });
+    }
+  }
+
+  // ============================================================
+  // INIT
+  // ============================================================
+  document.addEventListener('DOMContentLoaded', () => {
+    window.demoEngine = new DemoEngine();
+  });
+
+})();
+</script>
+</body>
+</html>
