@@ -8,32 +8,32 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=Instrument+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,700&display=swap" rel="stylesheet">
 <style>
   /* ========================================
-     CSS DESIGN SYSTEM
+     CSS DESIGN SYSTEM — Airline Professional
      ======================================== */
   :root {
-    --bg-deep: #0a0a0f;
-    --bg-surface: #12121a;
-    --bg-card: #1a1a26;
-    --bg-card-hover: #22222f;
-    --border: #2a2a3a;
-    --border-bright: #3a3a50;
-    --text-primary: #e8e8f0;
-    --text-secondary: #8888a0;
-    --text-dim: #555570;
-    --amber: #f0a030;
-    --amber-dim: #f0a03040;
-    --green: #40c870;
-    --green-dim: #40c87025;
-    --blue: #4088e8;
-    --blue-dim: #4088e825;
-    --purple: #9070e8;
-    --purple-dim: #9070e825;
-    --red: #e84040;
-    --red-dim: #e8404025;
+    --bg-deep: #f5f6f8;
+    --bg-surface: #ffffff;
+    --bg-card: #f0f2f5;
+    --bg-card-hover: #e8edf5;
+    --border: #dde1e7;
+    --border-bright: #c5cdd8;
+    --text-primary: #1a2332;
+    --text-secondary: #5a6577;
+    --text-dim: #8b95a5;
+    --amber: #003DA5;
+    --amber-dim: #003DA518;
+    --green: #003DA5;
+    --green-dim: #003DA515;
+    --blue: #0056D6;
+    --blue-dim: #0056D615;
+    --purple: #002B75;
+    --purple-dim: #002B7515;
+    --red: #C8102E;
+    --red-dim: #C8102E15;
 
     /* Chat-specific */
-    --chat-user-bg: #2a2a4a;
-    --chat-agent-bg: #1a2a1a;
+    --chat-user-bg: #003DA5;
+    --chat-agent-bg: #f0f2f5;
 
     /* Fonts */
     --mono: 'IBM Plex Mono', monospace;
@@ -52,32 +52,6 @@
     overflow: hidden;
   }
 
-  /* --- NOISE TEXTURE OVERLAY --- */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 9999;
-  }
-
-  /* --- SCANLINES --- */
-  body::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background: repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(0,0,0,0.03) 2px,
-      rgba(0,0,0,0.03) 4px
-    );
-    pointer-events: none;
-    z-index: 9998;
-  }
-
   /* ========================================
      LAYOUT — .demo-wrapper
      ======================================== */
@@ -92,25 +66,15 @@
   /* --- HEADER --- */
   .demo-header {
     flex-shrink: 0;
-    padding: 20px 32px;
+    padding: 16px 32px;
     border-bottom: 1px solid var(--border);
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 16px;
     position: relative;
-    background: var(--bg-surface);
-  }
-
-  .demo-header::after {
-    content: '';
-    position: absolute;
-    bottom: -1px;
-    left: 0;
-    width: 180px;
-    height: 1px;
-    background: var(--amber);
-    box-shadow: 0 0 16px var(--amber-dim);
+    background: #003DA5;
+    color: white;
   }
 
   .header-left {
@@ -123,12 +87,12 @@
     font-family: var(--display);
     font-size: 22px;
     font-weight: 700;
-    color: var(--text-primary);
+    color: white;
     letter-spacing: -0.5px;
   }
 
   .header-logo span {
-    color: var(--amber);
+    color: rgba(255,255,255,0.85);
   }
 
   .header-badge {
@@ -137,17 +101,17 @@
     font-weight: 600;
     letter-spacing: 1.5px;
     text-transform: uppercase;
-    color: var(--amber);
-    background: var(--amber-dim);
+    color: white;
+    background: rgba(255,255,255,0.15);
     padding: 3px 10px;
     border-radius: 2px;
-    border: 1px solid #f0a03050;
+    border: 1px solid rgba(255,255,255,0.25);
   }
 
   .header-right {
     font-family: var(--mono);
     font-size: 11px;
-    color: var(--text-dim);
+    color: rgba(255,255,255,0.7);
     letter-spacing: 0.5px;
   }
 
@@ -193,7 +157,7 @@
   /* --- ANNOTATION PANEL (40%) --- */
   .annotation-panel {
     flex: 0 0 40%;
-    background: var(--bg-surface);
+    background: #f0f2f5;
     display: flex;
     flex-direction: column;
     position: relative;
@@ -231,6 +195,7 @@
     z-index: 5;
     opacity: 0;
     transition: opacity 0.4s ease;
+    display: none;
   }
 
   .annotation-panel.active .panel-connector {
@@ -241,17 +206,16 @@
   .annotation-card {
     width: 100%;
     max-width: 420px;
-    background: var(--bg-card);
+    background: white;
     border: 1px solid var(--border);
-    border-left: 3px solid var(--amber);
-    border-radius: 4px;
+    border-left: 3px solid #003DA5;
+    border-radius: 8px;
     padding: 28px;
     position: sticky;
     top: 32px;
     opacity: 0;
     transform: translateY(8px);
     transition: opacity 0.4s ease, transform 0.4s ease;
-    /* Needed for ::before glow pseudo-element */
     overflow: visible;
   }
 
@@ -286,8 +250,8 @@
     font-weight: 600;
     letter-spacing: 1.5px;
     text-transform: uppercase;
-    color: var(--amber);
-    background: var(--amber-dim);
+    color: #003DA5;
+    background: #003DA510;
     padding: 2px 8px;
     border-radius: 2px;
     margin-bottom: 12px;
@@ -341,12 +305,12 @@
   .msg-user .bubble {
     max-width: 75%;
     background: var(--chat-user-bg);
-    border: 1px solid #3a3a5a;
+    border: none;
     border-radius: 16px 16px 4px 16px;
     padding: 12px 18px;
     font-size: 14px;
     line-height: 1.55;
-    color: var(--text-primary);
+    color: white;
   }
 
   /* --- Agent Message --- */
@@ -364,22 +328,22 @@
     width: 30px;
     height: 30px;
     border-radius: 50%;
-    background: var(--green-dim);
-    border: 1.5px solid var(--green);
+    background: #003DA5;
+    border: none;
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: var(--mono);
     font-size: 12px;
     font-weight: 700;
-    color: var(--green);
+    color: white;
     margin-top: 2px;
   }
 
   .msg-agent .bubble {
     max-width: 75%;
     background: var(--chat-agent-bg);
-    border: 1px solid #2a3a2a;
+    border: 1px solid var(--border);
     border-radius: 16px 16px 16px 4px;
     padding: 12px 18px;
     font-size: 14px;
@@ -407,7 +371,7 @@
     font-size: 11px;
     color: var(--text-dim);
     letter-spacing: 0.5px;
-    background: var(--bg-surface);
+    background: #eef1f6;
     padding: 4px 14px;
     border-radius: 10px;
     display: inline-block;
@@ -426,7 +390,7 @@
 
   .msg-typing .bubble {
     background: var(--chat-agent-bg);
-    border: 1px solid #2a3a2a;
+    border: 1px solid var(--border);
     border-radius: 16px 16px 16px 4px;
     padding: 14px 20px;
   }
@@ -440,7 +404,7 @@
   .typing-dot {
     width: 7px;
     height: 7px;
-    background: var(--green);
+    background: #003DA5;
     border-radius: 50%;
     opacity: 0.4;
     animation: typingBounce 1.4s ease-in-out infinite;
@@ -506,8 +470,7 @@
     top: 0;
     left: 0;
     height: 3px;
-    background: var(--amber);
-    box-shadow: 0 0 12px var(--amber-dim);
+    background: #003DA5;
     transition: width 0.5s ease;
     border-radius: 0 2px 2px 0;
   }
@@ -562,8 +525,8 @@
   }
 
   .mode-btn.active {
-    background: var(--amber-dim);
-    color: var(--amber);
+    background: #003DA515;
+    color: #003DA5;
   }
 
   .mode-btn:hover:not(.active) {
@@ -601,14 +564,14 @@
   .ctrl-btn.primary {
     width: 42px;
     height: 42px;
-    background: var(--amber-dim);
-    border-color: #f0a03050;
-    color: var(--amber);
+    background: #003DA5;
+    border-color: #003DA5;
+    color: white;
   }
 
   .ctrl-btn.primary:hover {
-    background: #f0a03035;
-    border-color: var(--amber);
+    background: #002B75;
+    border-color: #002B75;
   }
 
   .ctrl-btn:disabled {
@@ -715,7 +678,7 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
-  /* Subtle glow behind active annotation card */
+  /* Active annotation accent */
   .annotation-card.visible::before {
     content: '';
     position: absolute;
@@ -723,8 +686,7 @@
     left: -4px;
     bottom: -1px;
     width: 3px;
-    background: var(--amber);
-    box-shadow: 0 0 14px var(--amber-dim), 0 0 28px #f0a03015;
+    background: #003DA5;
     border-radius: 2px 0 0 2px;
   }
 </style>
