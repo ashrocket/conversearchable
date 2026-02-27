@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BusinessTravelSearch — Strategy Briefing</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1a1e;
+    --paper: #f6f4f0;
+    --cream: #eae6df;
+    --accent: #c4553a;
+    --accent-soft: #c4553a18;
+    --accent-mid: #c4553a40;
+    --muted: #8a8680;
+    --border: #d4d0ca;
+    --success: #3a7d44;
+    --success-bg: #3a7d4412;
+    --pending: #b8860b;
+    --pending-bg: #b8860b12;
+    --decision: #2856a3;
+    --decision-bg: #2856a314;
+    --serif: 'Cormorant Garamond', Georgia, serif;
+    --sans: 'DM Sans', -apple-system, sans-serif;
+    --mono: 'JetBrains Mono', monospace;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* --- HEADER --- */
+  header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 3rem 0 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background:
+      radial-gradient(ellipse at 20% 50%, #c4553a15 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 20%, #2856a310 0%, transparent 50%);
+  }
+
+  .header-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    position: relative;
+  }
+
+  .header-meta {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #999;
+    margin-bottom: 1.5rem;
+    display: flex;
+    gap: 2rem;
+  }
+
+  .header-meta span {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .dot--live { background: var(--success); box-shadow: 0 0 6px var(--success); }
+  .dot--wip { background: var(--pending); }
+
+  h1 {
+    font-family: var(--serif);
+    font-size: 3rem;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.6rem;
+  }
+
+  .subtitle {
+    font-size: 1.15rem;
+    color: #aaa;
+    font-weight: 400;
+    max-width: 600px;
+  }
+
+  /* --- MAIN --- */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 3rem 2rem 6rem;
+  }
+
+  /* --- SECTIONS --- */
+  section {
+    margin-bottom: 3.5rem;
+  }
+
+  .section-label {
+    font-family: var(--mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+  }
+
+  h2 {
+    font-family: var(--serif);
+    font-size: 2rem;
+    font-weight: 600;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+    letter-spacing: -0.01em;
+  }
+
+  h3 {
+    font-family: var(--serif);
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+  }
+
+  p {
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+    color: #3a3a3e;
+  }
+
+  /* --- THESIS BOX --- */
+  .thesis {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 2rem 2.5rem;
+    border-radius: 2px;
+    margin: 2rem 0;
+    position: relative;
+  }
+
+  .thesis::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    background: var(--accent);
+  }
+
+  .thesis p {
+    font-family: var(--serif);
+    font-size: 1.25rem;
+    font-style: italic;
+    line-height: 1.5;
+    color: #ddd;
+    margin: 0;
+  }
+
+  .thesis .attribution {
+    font-family: var(--sans);
+    font-size: 0.78rem;
+    font-style: normal;
+    color: #888;
+    margin-top: 0.8rem;
+    letter-spacing: 0.02em;
+  }
+
+  /* --- STATUS GRID --- */
+  .status-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    margin: 1.5rem 0;
+  }
+
+  .status-cell {
+    background: var(--paper);
+    padding: 1.2rem 1.4rem;
+  }
+
+  .status-cell__label {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.3rem;
+  }
+
+  .status-cell__value {
+    font-family: var(--serif);
+    font-size: 1.8rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .status-cell__detail {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-top: 0.15rem;
+  }
+
+  /* --- BUILT LIST --- */
+  .built-list {
+    list-style: none;
+    margin: 1.5rem 0;
+  }
+
+  .built-list li {
+    padding: 0.7rem 0;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: flex-start;
+    gap: 0.8rem;
+    font-size: 0.92rem;
+  }
+
+  .built-list li:last-child { border-bottom: none; }
+
+  .tag {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.5rem;
+    border-radius: 2px;
+    white-space: nowrap;
+    font-weight: 500;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+
+  .tag--live { background: var(--success-bg); color: var(--success); border: 1px solid #3a7d4430; }
+  .tag--mock { background: var(--pending-bg); color: var(--pending); border: 1px solid #b8860b30; }
+  .tag--ready { background: var(--decision-bg); color: var(--decision); border: 1px solid #2856a330; }
+
+  .built-list .item-text strong {
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .built-list .item-text span {
+    color: var(--muted);
+  }
+
+  /* --- STRATEGY FLOW --- */
+  .flow {
+    display: flex;
+    gap: 0;
+    margin: 2rem 0;
+    position: relative;
+  }
+
+  .flow-step {
+    flex: 1;
+    padding: 1.5rem 1.2rem;
+    background: white;
+    border: 1px solid var(--border);
+    position: relative;
+    text-align: center;
+  }
+
+  .flow-step:not(:last-child)::after {
+    content: '→';
+    position: absolute;
+    right: -0.85rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.2rem;
+    color: var(--accent);
+    z-index: 1;
+    background: var(--paper);
+    padding: 0.2rem;
+    line-height: 1;
+  }
+
+  .flow-step__phase {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .flow-step__title {
+    font-family: var(--serif);
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin: 0.3rem 0;
+  }
+
+  .flow-step__desc {
+    font-size: 0.78rem;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+
+  .flow-step--active {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent);
+  }
+
+  .flow-step--active .flow-step__phase { color: var(--accent); }
+
+  /* --- CONCEPT BLOCK --- */
+  .concept {
+    background: white;
+    border: 1px solid var(--border);
+    padding: 2rem;
+    margin: 1.5rem 0;
+  }
+
+  .concept-header {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    margin-bottom: 1rem;
+  }
+
+  .concept-icon {
+    width: 40px; height: 40px;
+    background: var(--ink);
+    color: var(--paper);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+
+  .concept ol {
+    padding-left: 1.2rem;
+    margin: 0.5rem 0;
+  }
+
+  .concept ol li {
+    font-size: 0.92rem;
+    margin-bottom: 0.5rem;
+    color: #3a3a3e;
+  }
+
+  .concept ol li strong { color: var(--ink); }
+
+  /* --- DECISION CARDS --- */
+  .decisions {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+
+  .decision-card {
+    background: white;
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--decision);
+    padding: 1.5rem 1.8rem;
+    position: relative;
+  }
+
+  .decision-card__number {
+    font-family: var(--mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--decision);
+    margin-bottom: 0.3rem;
+  }
+
+  .decision-card h4 {
+    font-family: var(--serif);
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .decision-card p {
+    font-size: 0.88rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .options {
+    list-style: none;
+    margin: 0.8rem 0 0;
+  }
+
+  .options li {
+    font-size: 0.88rem;
+    padding: 0.45rem 0;
+    padding-left: 1.4rem;
+    position: relative;
+    color: #3a3a3e;
+  }
+
+  .options li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.75rem;
+    width: 8px; height: 8px;
+    border: 1.5px solid var(--border);
+    border-radius: 50%;
+  }
+
+  .options li.chosen::before {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .options li.chosen {
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  .rec {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 500;
+    margin-left: 0.3rem;
+  }
+
+  /* --- DECIDED SECTION --- */
+  .decided-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+
+  .decided-item {
+    background: white;
+    border: 1px solid var(--border);
+    padding: 1.2rem 1.4rem;
+    border-top: 2px solid var(--success);
+  }
+
+  .decided-item__q {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-bottom: 0.25rem;
+  }
+
+  .decided-item__a {
+    font-family: var(--serif);
+    font-size: 1.15rem;
+    font-weight: 700;
+  }
+
+  .decided-item__why {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-top: 0.2rem;
+  }
+
+  /* --- DIVIDER --- */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 3rem 0;
+  }
+
+  /* --- FOOTER --- */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-family: var(--mono);
+    letter-spacing: 0.05em;
+  }
+
+  /* --- CALLOUT --- */
+  .callout {
+    background: var(--accent-soft);
+    border-left: 3px solid var(--accent);
+    padding: 1rem 1.4rem;
+    margin: 1.5rem 0;
+    font-size: 0.9rem;
+    color: #3a3a3e;
+  }
+
+  .callout strong { color: var(--ink); }
+
+  /* --- ANIMATION --- */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  section {
+    animation: fadeUp 0.5s ease-out both;
+  }
+
+  section:nth-child(2) { animation-delay: 0.05s; }
+  section:nth-child(3) { animation-delay: 0.1s; }
+  section:nth-child(4) { animation-delay: 0.15s; }
+  section:nth-child(5) { animation-delay: 0.2s; }
+  section:nth-child(6) { animation-delay: 0.25s; }
+
+  @media (max-width: 700px) {
+    h1 { font-size: 2.2rem; }
+    .status-grid { grid-template-columns: 1fr; }
+    .flow { flex-direction: column; }
+    .flow-step:not(:last-child)::after { content: '↓'; right: 50%; top: auto; bottom: -0.85rem; transform: translateX(50%); }
+    .decided-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-meta">
+      <span><span class="dot dot--live"></span> Briefing — Feb 25, 2026</span>
+      <span><span class="dot dot--wip"></span> Design Phase</span>
+    </div>
+    <h1>BusinessTravelSearch</h1>
+    <p class="subtitle">The conversearchable agent that makes every airline website intelligent — and makes airlines want to buy the technology.</p>
+  </div>
+</header>
+
+<main>
+
+  <!-- THESIS -->
+  <section>
+    <div class="section-label">Thesis</div>
+    <div class="thesis">
+      <p>Build a browser extension that wraps any airline site in a conversational AI layer. Get real users. Get real love. Then sell the technology to the airlines themselves.</p>
+      <div class="attribution">The extension is the trojan horse. The product is the conversearchable agent technology.</div>
+    </div>
+  </section>
+
+  <!-- WHAT'S BUILT -->
+  <section>
+    <div class="section-label">What's Built</div>
+    <h2>Phase 1 MVP — Complete</h2>
+    <p>A working LLM-powered travel agent backend with calendar intelligence, honest flight ranking, and a web chat interface. All services run in mock mode — real API keys flip it to production.</p>
+
+    <div class="status-grid">
+      <div class="status-cell">
+        <div class="status-cell__label">Source Files</div>
+        <div class="status-cell__value">30</div>
+        <div class="status-cell__detail">TypeScript, clean build</div>
+      </div>
+      <div class="status-cell">
+        <div class="status-cell__label">API Endpoints</div>
+        <div class="status-cell__value">11</div>
+        <div class="status-cell__detail">REST + WebSocket</div>
+      </div>
+      <div class="status-cell">
+        <div class="status-cell__label">Status</div>
+        <div class="status-cell__value">Running</div>
+        <div class="status-cell__detail">localhost:3000, mock mode</div>
+      </div>
+      <div class="status-cell">
+        <div class="status-cell__label">External APIs</div>
+        <div class="status-cell__value">4</div>
+        <div class="status-cell__detail">Claude, Duffel, Google Cal, OpenCage</div>
+      </div>
+    </div>
+
+    <ul class="built-list">
+      <li>
+        <span class="tag tag--live">Live</span>
+        <span class="item-text"><strong>Honest flight ranking engine</strong> <span>— scores by user preferences, not commissions. Transparent trade-off commentary.</span></span>
+      </li>
+      <li>
+        <span class="tag tag--live">Live</span>
+        <span class="item-text"><strong>Conversational travel agent</strong> <span>— Claude-powered intent detection, calendar scanning, flight search via natural language.</span></span>
+      </li>
+      <li>
+        <span class="tag tag--live">Live</span>
+        <span class="item-text"><strong>User auth &amp; preferences</strong> <span>— JWT sessions, preference learning from booking history, per-user personalization.</span></span>
+      </li>
+      <li>
+        <span class="tag tag--mock">Mock</span>
+        <span class="item-text"><strong>Calendar intelligence</strong> <span>— detects travel-implying events. Google OAuth2 ready, running with synthetic events.</span></span>
+      </li>
+      <li>
+        <span class="tag tag--mock">Mock</span>
+        <span class="item-text"><strong>Flight search via Duffel</strong> <span>— full integration built but running on mock data. Real API key activates it.</span></span>
+      </li>
+      <li>
+        <span class="tag tag--ready">Ready</span>
+        <span class="item-text"><strong>Group travel coordinator</strong> <span>— detects overlapping org travel, voting-based group flight selection.</span></span>
+      </li>
+      <li>
+        <span class="tag tag--live">Live</span>
+        <span class="item-text"><strong>Web chat UI + Quick Demo</strong> <span>— embeddable chat widget with WebSocket real-time messaging.</span></span>
+      </li>
+    </ul>
+  </section>
+
+  <hr class="divider">
+
+  <!-- STRATEGY -->
+  <section>
+    <div class="section-label">Go-to-Market Strategy</div>
+    <h2>The Three-Phase Sequence</h2>
+    <p>Each phase builds the user base that pulls us into the next. Consumer adoption funds and validates the enterprise play.</p>
+
+    <div class="flow">
+      <div class="flow-step flow-step--active">
+        <div class="flow-step__phase">Phase 1 — Now</div>
+        <div class="flow-step__title">Browser Extension</div>
+        <div class="flow-step__desc">Viral consumer launch. Individual travelers discover the agent on airline sites they already use.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step__phase">Phase 2 — Fast Follow</div>
+        <div class="flow-step__title">Multi-User</div>
+        <div class="flow-step__desc">Couples, families, friend groups. Travelers tell each other. Network effects kick in.</div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-step__phase">Phase 3 — Revenue</div>
+        <div class="flow-step__title">Sell to Airlines</div>
+        <div class="flow-step__desc">Demo adoption metrics. Airlines license the conversearchable agent for their own sites.</div>
+      </div>
+    </div>
+
+    <div class="callout">
+      <strong>The pitch to airlines:</strong> "Your users are already using a conversational layer on top of your site. We didn't replace your search — we made it conversational. Now embed it natively and own the experience."
+    </div>
+  </section>
+
+  <!-- CORE CONCEPT -->
+  <section>
+    <div class="section-label">Core Concept</div>
+    <h2>The Conversearchable Agent</h2>
+    <p>The extension sits as a sidebar on any airline website. It doesn't replace the airline's search — it <em>drives</em> it. The agent manipulates the airline's own search forms, reads their results from the page, and presents them conversationally.</p>
+
+    <div class="concept">
+      <div class="concept-header">
+        <div class="concept-icon">&#9992;</div>
+        <h3>How it works on Delta.com</h3>
+      </div>
+      <ol>
+        <li><strong>User activates extension</strong> — sidebar slides out on Delta's flight search page</li>
+        <li><strong>Agent reads the page</strong> — understands the user is searching JFK → LAX, March 5th</li>
+        <li><strong>User talks naturally</strong> — "find me something earlier" or "what about nonstop only"</li>
+        <li><strong>Agent drives Delta's UI</strong> — changes the search form, submits, reads new results</li>
+        <li><strong>Agent presents honestly</strong> — ranks Delta's results by user's actual priorities with transparent trade-offs</li>
+        <li><strong>Cross-airline honesty</strong> — "Delta has this nonstop at $380, but Southwest has one for $290 that leaves 6 hours later. No assigned seating though."</li>
+        <li><strong>Booking stays on-site</strong> — user clicks through on Delta.com or follows a link to Southwest</li>
+      </ol>
+    </div>
+
+    <p>The cross-airline comparison (step 6) is the honesty principle as a feature. External APIs like Duffel provide comparison data, but the <strong>airline's own site is the primary search engine</strong>. Duffel is a convenience, not a dependency — the architecture doesn't couple to it.</p>
+  </section>
+
+  <hr class="divider">
+
+  <!-- DECISIONS MADE -->
+  <section>
+    <div class="section-label">Decisions Made</div>
+    <h2>What We've Locked In</h2>
+
+    <div class="decided-grid">
+      <div class="decided-item">
+        <div class="decided-item__q">Interaction model?</div>
+        <div class="decided-item__a">Sidebar Chat</div>
+        <div class="decided-item__why">Persistent panel, conversational, non-invasive</div>
+      </div>
+      <div class="decided-item">
+        <div class="decided-item__q">Where does flight data come from?</div>
+        <div class="decided-item__a">The Airline's Own Site</div>
+        <div class="decided-item__why">Agent drives the page's search forms and reads results from DOM</div>
+      </div>
+      <div class="decided-item">
+        <div class="decided-item__q">Role of external APIs (Duffel)?</div>
+        <div class="decided-item__a">Comparison Data Only</div>
+        <div class="decided-item__why">Architecture doesn't depend on Duffel — it's supplementary cross-airline data</div>
+      </div>
+      <div class="decided-item">
+        <div class="decided-item__q">Booking model?</div>
+        <div class="decided-item__a">Stays On-Site</div>
+        <div class="decided-item__why">User books on the airline's site. Deep-link to other airlines for cross-sell.</div>
+      </div>
+    </div>
+  </section>
+
+  <hr class="divider">
+
+  <!-- DECISIONS NEEDED -->
+  <section>
+    <div class="section-label">Decisions Needed</div>
+    <h2>Open Questions</h2>
+    <p>These decisions shape the extension's architecture and first release. Each one is a trade-off between speed-to-demo and breadth of coverage.</p>
+
+    <div class="decisions">
+
+      <div class="decision-card">
+        <div class="decision-card__number">Decision 01</div>
+        <h4>How site-specific should v1 be?</h4>
+        <p>The extension needs to understand each airline's DOM to drive search and read results. How deep do we go on day one?</p>
+        <ul class="options">
+          <li><strong>One airline, polished</strong> — pick Delta or United, build a deep adapter that really knows the site. Nail the demo. <span class="rec">Recommended</span></li>
+          <li><strong>Generic-ish</strong> — try to work across multiple airline sites from day one, accepting it'll be rougher on each</li>
+          <li><strong>One deep + generic fallback</strong> — deep adapter for one flagship site, plus best-effort generic mode for others</li>
+        </ul>
+      </div>
+
+      <div class="decision-card">
+        <div class="decision-card__number">Decision 02</div>
+        <h4>Which airline site first?</h4>
+        <p>If we go deep on one, which one makes the best demo and has the most forgiving DOM structure?</p>
+        <ul class="options">
+          <li><strong>United (united.com)</strong> — large market share, modern-ish site, NDC-forward</li>
+          <li><strong>Delta (delta.com)</strong> — premium brand, good UX already (shows the agent improving good UX)</li>
+          <li><strong>American (aa.com)</strong> — largest US airline by fleet</li>
+          <li><strong>Southwest (southwest.com)</strong> — unique model (no seat assignments), high brand loyalty</li>
+          <li><strong>Other?</strong></li>
+        </ul>
+      </div>
+
+      <div class="decision-card">
+        <div class="decision-card__number">Decision 03</div>
+        <h4>Where does the LLM run?</h4>
+        <p>The agent needs Claude for reasoning. Where does inference happen?</p>
+        <ul class="options">
+          <li><strong>Your backend server</strong> — extension calls your API, which calls Claude. You control the experience, but need hosting. <span class="rec">Recommended</span></li>
+          <li><strong>Client-side with user's API key</strong> — extension calls Claude directly. No server needed, but users need an Anthropic key (developer audience only)</li>
+          <li><strong>Hybrid</strong> — free tier on your server, power users can BYO key for unlimited use</li>
+        </ul>
+      </div>
+
+      <div class="decision-card">
+        <div class="decision-card__number">Decision 04</div>
+        <h4>Does the extension need auth?</h4>
+        <p>Auth enables preferences, history, and multi-user — but adds friction to first use.</p>
+        <ul class="options">
+          <li><strong>No auth for v1</strong> — anonymous, zero friction. Preferences stored locally. Auth added later for multi-user. <span class="rec">Recommended</span></li>
+          <li><strong>Optional auth</strong> — works anonymously, but sign in to save preferences and enable cross-device sync</li>
+          <li><strong>Required auth</strong> — needed from the start to track users for the airline sales pitch</li>
+        </ul>
+      </div>
+
+      <div class="decision-card">
+        <div class="decision-card__number">Decision 05</div>
+        <h4>What's the demo scenario?</h4>
+        <p>The first public demo needs to be a single compelling story that someone can experience in 60 seconds.</p>
+        <ul class="options">
+          <li><strong>"Make this search better"</strong> — user is mid-search, opens sidebar, agent instantly improves results</li>
+          <li><strong>"Find me a better option"</strong> — user sees expensive flights, agent finds cheaper alternatives across airlines</li>
+          <li><strong>"Plan my whole trip"</strong> — user describes the trip in plain English, agent handles everything</li>
+          <li><strong>Something else?</strong></li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ARCHITECTURE NOTE -->
+  <section>
+    <div class="section-label">Architecture Note</div>
+    <h2>Duffel Is Not the Foundation</h2>
+    <p>Duffel ($3 + 1% per booking, 300+ airlines, clean TypeScript SDK) is useful for cross-airline comparison data. But the architecture treats it as one adapter behind a <code>FlightSearchProvider</code> interface. The core search capability is the airline's own website, driven by the extension.</p>
+    <p>If Duffel disappears tomorrow, the core product is unaffected. Cross-airline comparison degrades to "check Southwest yourself" — which is still honest.</p>
+  </section>
+
+</main>
+
+<footer>
+  BusinessTravelSearch — Internal Strategy Briefing — Feb 25, 2026
+</footer>
+
+</body>
+</html>

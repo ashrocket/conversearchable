@@ -1,0 +1,1742 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BusinessTravelSearch — Marketing Campaign Plan</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0a0a0c;
+    --paper: #f4f1ec;
+    --cream: #ebe7df;
+    --warm-gray: #9a9590;
+    --accent: #c44b2b;
+    --accent-light: #e8654a;
+    --deep-blue: #1a2744;
+    --teal: #2a7a6e;
+    --gold: #b8912e;
+    --rule: rgba(10,10,12,0.12);
+    --rule-heavy: rgba(10,10,12,0.25);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    font-size: 17px;
+    scroll-behavior: smooth;
+    background: var(--ink);
+  }
+
+  body {
+    font-family: 'DM Sans', -apple-system, sans-serif;
+    color: var(--ink);
+    background: var(--paper);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ─── COVER ─── */
+  .cover {
+    min-height: 100vh;
+    background: var(--ink);
+    color: var(--paper);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 4rem 5vw 5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cover::before {
+    content: '';
+    position: absolute;
+    top: -20%;
+    right: -10%;
+    width: 70vw;
+    height: 70vw;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(196,75,43,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .cover::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(244,241,236,0.15), transparent);
+  }
+
+  .cover-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.25em;
+    color: var(--accent);
+    margin-bottom: 2rem;
+  }
+
+  .cover h1 {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: clamp(3rem, 8vw, 6.5rem);
+    font-weight: 400;
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    max-width: 14ch;
+    margin-bottom: 2rem;
+  }
+
+  .cover h1 em {
+    font-style: italic;
+    color: var(--accent-light);
+  }
+
+  .cover-meta {
+    display: flex;
+    gap: 3rem;
+    font-size: 0.85rem;
+    color: var(--warm-gray);
+    border-top: 1px solid rgba(244,241,236,0.1);
+    padding-top: 1.5rem;
+    margin-top: 1rem;
+  }
+
+  .cover-meta dt {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: rgba(244,241,236,0.35);
+    margin-bottom: 0.25rem;
+  }
+
+  /* ─── NAVIGATION ─── */
+  .toc-bar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(244,241,236,0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--rule);
+    padding: 0 5vw;
+    overflow-x: auto;
+  }
+
+  .toc-bar nav {
+    display: flex;
+    gap: 0;
+    white-space: nowrap;
+  }
+
+  .toc-bar a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--warm-gray);
+    text-decoration: none;
+    padding: 0.9rem 1.2rem;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+  }
+
+  .toc-bar a:hover {
+    color: var(--ink);
+    border-bottom-color: var(--accent);
+  }
+
+  /* ─── STATUS BAR ─── */
+  .status-strip {
+    background: var(--teal);
+    color: white;
+    padding: 0.6rem 5vw;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .status-strip .badge {
+    background: rgba(255,255,255,0.18);
+    padding: 0.2rem 0.6rem;
+    border-radius: 2px;
+    font-size: 0.65rem;
+  }
+
+  /* ─── THESIS ─── */
+  .thesis {
+    padding: 6rem 5vw;
+    max-width: 52rem;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .thesis blockquote {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+    line-height: 1.35;
+    font-style: italic;
+    color: var(--deep-blue);
+    position: relative;
+    padding: 2rem 0;
+  }
+
+  .thesis blockquote::before,
+  .thesis blockquote::after {
+    content: '';
+    display: block;
+    width: 4rem;
+    height: 1px;
+    background: var(--accent);
+    margin: 0 auto;
+  }
+
+  .thesis blockquote::before { margin-bottom: 2rem; }
+  .thesis blockquote::after { margin-top: 2rem; }
+
+  /* ─── SECTION LAYOUT ─── */
+  .section {
+    padding: 5rem 5vw;
+    border-top: 1px solid var(--rule);
+    position: relative;
+  }
+
+  .section:nth-child(even) {
+    background: var(--cream);
+  }
+
+  .section-inner {
+    max-width: 68rem;
+    margin: 0 auto;
+  }
+
+  .section-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    margin-bottom: 0.75rem;
+    display: block;
+  }
+
+  .section h2 {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: clamp(2rem, 4vw, 3.2rem);
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+    max-width: 20ch;
+  }
+
+  .section-lead {
+    font-size: 1.1rem;
+    color: var(--warm-gray);
+    max-width: 42rem;
+    margin-bottom: 3rem;
+    line-height: 1.65;
+  }
+
+  h3 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin: 2.5rem 0 1rem;
+    color: var(--deep-blue);
+  }
+
+  h4 {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--warm-gray);
+    margin: 2rem 0 0.75rem;
+  }
+
+  p {
+    margin-bottom: 1rem;
+    max-width: 42rem;
+  }
+
+  strong { font-weight: 600; }
+
+  /* ─── PERSONA CARDS ─── */
+  .persona-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+  }
+
+  .persona-card {
+    background: white;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 2rem;
+    position: relative;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .persona-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.06);
+  }
+
+  .persona-card.primary {
+    border-left: 3px solid var(--accent);
+  }
+
+  .persona-card.secondary {
+    border-left: 3px solid var(--teal);
+  }
+
+  .persona-card.tertiary {
+    border-left: 3px solid var(--gold);
+  }
+
+  .persona-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    padding: 0.15rem 0.5rem;
+    border-radius: 2px;
+    display: inline-block;
+    margin-bottom: 1rem;
+  }
+
+  .persona-card.primary .persona-tag {
+    background: rgba(196,75,43,0.1);
+    color: var(--accent);
+  }
+
+  .persona-card.secondary .persona-tag {
+    background: rgba(42,122,110,0.1);
+    color: var(--teal);
+  }
+
+  .persona-card.tertiary .persona-tag {
+    background: rgba(184,145,46,0.1);
+    color: var(--gold);
+  }
+
+  .persona-name {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 1.6rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .persona-role {
+    font-size: 0.85rem;
+    color: var(--warm-gray);
+    margin-bottom: 1.25rem;
+  }
+
+  .persona-card ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .persona-card li {
+    font-size: 0.88rem;
+    padding: 0.4rem 0;
+    border-top: 1px solid var(--rule);
+    line-height: 1.5;
+  }
+
+  .persona-card li:first-child {
+    border-top: none;
+  }
+
+  .persona-hook {
+    background: rgba(10,10,12,0.03);
+    border-radius: 3px;
+    padding: 1rem;
+    margin-top: 1.25rem;
+    font-size: 0.85rem;
+  }
+
+  .persona-hook em {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 0.95rem;
+    display: block;
+    color: var(--deep-blue);
+    margin-top: 0.5rem;
+  }
+
+  .persona-path {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--warm-gray);
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--rule);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    align-items: center;
+  }
+
+  .persona-path span {
+    background: rgba(10,10,12,0.05);
+    padding: 0.15rem 0.45rem;
+    border-radius: 2px;
+  }
+
+  .persona-path .arrow {
+    background: none;
+    color: var(--accent);
+  }
+
+  /* ─── ANTI-PERSONAS ─── */
+  .anti-personas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+  }
+
+  .anti-persona {
+    background: rgba(10,10,12,0.03);
+    padding: 1.2rem;
+    border-radius: 3px;
+    font-size: 0.85rem;
+    border-left: 2px solid var(--rule-heavy);
+  }
+
+  .anti-persona strong {
+    display: block;
+    margin-bottom: 0.35rem;
+    font-size: 0.82rem;
+  }
+
+  .anti-persona span {
+    color: var(--warm-gray);
+    font-size: 0.82rem;
+  }
+
+  /* ─── NARRATIVE ARC ─── */
+  .narrative {
+    display: grid;
+    grid-template-columns: 4rem 1fr;
+    gap: 0 2rem;
+    margin: 2rem 0;
+    position: relative;
+  }
+
+  .narrative::before {
+    content: '';
+    position: absolute;
+    left: 1.95rem;
+    top: 2rem;
+    bottom: 2rem;
+    width: 1px;
+    background: var(--rule-heavy);
+  }
+
+  .narrative-phase {
+    padding: 2rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .narrative-phase:last-child { border-bottom: none; }
+
+  .narrative-marker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    color: var(--warm-gray);
+    padding-top: 2rem;
+    position: relative;
+  }
+
+  .narrative-marker::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    position: absolute;
+    top: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .narrative-content {
+    padding: 2rem 0;
+  }
+
+  .narrative-content h3 {
+    margin-top: 0;
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 1.4rem;
+    font-weight: 400;
+  }
+
+  .narrative-content p {
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+
+  /* ─── ANGLE TABLE ─── */
+  .angle-winner {
+    background: white;
+    border: 1px solid var(--rule);
+    border-left: 4px solid var(--accent);
+    border-radius: 3px;
+    padding: 2rem 2.5rem;
+    margin: 2rem 0;
+  }
+
+  .angle-winner h3 {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 1.8rem;
+    font-weight: 400;
+    color: var(--accent);
+    margin: 0 0 1.5rem;
+  }
+
+  .angle-winner ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .angle-winner li {
+    padding: 0.5rem 0 0.5rem 1.8rem;
+    position: relative;
+    font-size: 0.92rem;
+  }
+
+  .angle-winner li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 1rem;
+    width: 1rem;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  /* ─── ONE-LINERS ─── */
+  .oneliners {
+    margin: 2rem 0;
+  }
+
+  .oneliner {
+    display: grid;
+    grid-template-columns: 10rem 1fr;
+    gap: 1.5rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--rule);
+    font-size: 0.9rem;
+    align-items: baseline;
+  }
+
+  .oneliner-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--warm-gray);
+  }
+
+  .oneliner-text {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 1.05rem;
+    font-style: italic;
+    color: var(--deep-blue);
+  }
+
+  /* ─── LANDING PAGE SECTION ─── */
+  .lp-mockup {
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 6px;
+    overflow: hidden;
+    margin: 2rem 0;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+  }
+
+  .lp-browser-bar {
+    background: rgba(255,255,255,0.06);
+    padding: 0.6rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .lp-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+  }
+
+  .lp-dot:first-child { background: #ff5f57; }
+  .lp-dot:nth-child(2) { background: #febc2e; }
+  .lp-dot:nth-child(3) { background: #28c840; }
+
+  .lp-url {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: rgba(255,255,255,0.35);
+    margin-left: 1rem;
+  }
+
+  .lp-hero {
+    padding: 4rem 3rem;
+    text-align: center;
+    background: linear-gradient(180deg, rgba(196,75,43,0.06) 0%, transparent 60%);
+  }
+
+  .lp-hero h2 {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+    max-width: 100%;
+    margin: 0 auto 1rem;
+    line-height: 1.15;
+  }
+
+  .lp-hero p {
+    font-size: 0.9rem;
+    color: var(--warm-gray);
+    max-width: 36rem;
+    margin: 0 auto 2rem;
+    line-height: 1.6;
+  }
+
+  .lp-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .lp-btn {
+    padding: 0.7rem 1.8rem;
+    border-radius: 4px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: transform 0.15s;
+    cursor: default;
+  }
+
+  .lp-btn:hover { transform: translateY(-1px); }
+
+  .lp-btn.primary {
+    background: var(--accent);
+    color: white;
+  }
+
+  .lp-btn.secondary {
+    background: rgba(255,255,255,0.08);
+    color: var(--paper);
+    border: 1px solid rgba(255,255,255,0.15);
+  }
+
+  .lp-social-proof {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 0.05em;
+    margin-top: 1.5rem;
+    text-align: center;
+  }
+
+  .lp-steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .lp-step {
+    padding: 2rem;
+    border-right: 1px solid rgba(255,255,255,0.06);
+    text-align: center;
+  }
+
+  .lp-step:last-child { border-right: none; }
+
+  .lp-step-num {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 2rem;
+    color: var(--accent-light);
+    opacity: 0.5;
+    margin-bottom: 0.5rem;
+  }
+
+  .lp-step h4 {
+    color: var(--paper);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: none;
+    letter-spacing: 0;
+    margin-bottom: 0.5rem;
+  }
+
+  .lp-step p {
+    font-size: 0.78rem;
+    color: var(--warm-gray);
+    margin: 0;
+    max-width: 100%;
+    line-height: 1.55;
+  }
+
+  /* ─── COPY BLOCKS ─── */
+  .copy-block {
+    background: white;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 2.5rem;
+    margin: 1.5rem 0;
+    position: relative;
+  }
+
+  .copy-block::before {
+    content: attr(data-label);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--warm-gray);
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+  }
+
+  .copy-block h3 {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-weight: 400;
+    font-size: 1.35rem;
+    margin: 0 0 1rem;
+  }
+
+  .copy-block p {
+    font-size: 0.92rem;
+    line-height: 1.7;
+  }
+
+  /* ─── TABLES ─── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+    font-size: 0.85rem;
+  }
+
+  thead th {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--warm-gray);
+    text-align: left;
+    padding: 0.8rem 1rem;
+    border-bottom: 2px solid var(--rule-heavy);
+    background: rgba(10,10,12,0.02);
+  }
+
+  td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--rule);
+    vertical-align: top;
+    line-height: 1.5;
+  }
+
+  tr:hover td {
+    background: rgba(10,10,12,0.015);
+  }
+
+  /* ─── DEMO FLOW ─── */
+  .demo-timeline {
+    position: relative;
+    margin: 2rem 0;
+    padding-left: 5rem;
+  }
+
+  .demo-timeline::before {
+    content: '';
+    position: absolute;
+    left: 2.2rem;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, var(--accent), var(--teal));
+  }
+
+  .demo-step {
+    position: relative;
+    margin-bottom: 2.5rem;
+  }
+
+  .demo-step:last-child { margin-bottom: 0; }
+
+  .demo-time {
+    position: absolute;
+    left: -5rem;
+    width: 4rem;
+    text-align: right;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--warm-gray);
+    top: 0.15rem;
+  }
+
+  .demo-step::before {
+    content: '';
+    position: absolute;
+    left: -2.95rem;
+    top: 0.3rem;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--paper);
+    border: 2px solid var(--accent);
+  }
+
+  .demo-step h4 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--ink);
+    margin: 0 0 0.5rem;
+  }
+
+  .demo-step p {
+    font-size: 0.88rem;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .chat-bubble {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 1rem 1.25rem;
+    border-radius: 2px 8px 8px 8px;
+    font-size: 0.82rem;
+    line-height: 1.55;
+    margin: 0.75rem 0;
+    max-width: 32rem;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .chat-bubble .flight-option {
+    display: block;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+
+  .chat-bubble .flight-option:last-child { border-bottom: none; }
+
+  .chat-bubble .flight-label {
+    color: var(--accent-light);
+    font-weight: 600;
+    font-size: 0.75rem;
+  }
+
+  .chat-bubble .flight-detail {
+    color: rgba(244,241,236,0.6);
+    font-style: italic;
+    font-size: 0.78rem;
+  }
+
+  /* ─── LAUNCH STRATEGY ─── */
+  .channel-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+  }
+
+  .channel-card {
+    background: white;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 2rem;
+  }
+
+  .channel-card h4 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-transform: none;
+    letter-spacing: 0;
+    color: var(--ink);
+    margin: 0 0 0.5rem;
+  }
+
+  .channel-card p {
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: var(--warm-gray);
+    max-width: 100%;
+  }
+
+  .hn-post {
+    background: #f6f6ef;
+    border: 1px solid #e0d8c8;
+    border-radius: 3px;
+    padding: 2rem;
+    margin: 2rem 0;
+    font-size: 0.88rem;
+    line-height: 1.7;
+  }
+
+  .hn-post .hn-title {
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+    color: #000;
+  }
+
+  .hn-post .hn-meta {
+    font-size: 0.75rem;
+    color: #828282;
+    margin-bottom: 1rem;
+  }
+
+  /* ─── PRESS ─── */
+  .pitch-email {
+    background: white;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    margin: 2rem 0;
+    overflow: hidden;
+  }
+
+  .pitch-email-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--rule);
+    font-size: 0.82rem;
+  }
+
+  .pitch-email-header span {
+    color: var(--warm-gray);
+    font-size: 0.75rem;
+  }
+
+  .pitch-email-body {
+    padding: 1.5rem;
+    font-size: 0.88rem;
+    line-height: 1.7;
+  }
+
+  /* ─── CALENDAR ─── */
+  .calendar-grid {
+    margin: 2rem 0;
+  }
+
+  .calendar-phase {
+    margin-bottom: 2.5rem;
+  }
+
+  .calendar-phase-header {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 1.3rem;
+    font-weight: 400;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--accent);
+    display: inline-block;
+  }
+
+  .day-row {
+    display: grid;
+    grid-template-columns: 6rem 1fr 8rem;
+    gap: 1rem;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--rule);
+    font-size: 0.85rem;
+    align-items: baseline;
+  }
+
+  .day-row:last-child { border-bottom: none; }
+
+  .day-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--warm-gray);
+  }
+
+  .day-channel {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--teal);
+    text-align: right;
+  }
+
+  /* ─── METRICS ─── */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+
+  .metric-card {
+    background: white;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 1.5rem;
+    text-align: center;
+  }
+
+  .metric-card .metric-value {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 2.5rem;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 0.25rem;
+  }
+
+  .metric-card .metric-label {
+    font-size: 0.78rem;
+    color: var(--warm-gray);
+  }
+
+  .metric-card .metric-target {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--teal);
+    margin-top: 0.5rem;
+  }
+
+  /* ─── CODE BLOCK ─── */
+  .code-block {
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    padding: 1.5rem;
+    border-radius: 3px;
+    margin: 1.5rem 0;
+    overflow-x: auto;
+    line-height: 1.7;
+  }
+
+  .code-block .comment { color: rgba(244,241,236,0.35); }
+  .code-block .cmd { color: var(--accent-light); }
+
+  /* ─── PRINCIPLES ─── */
+  .principles {
+    counter-reset: principle;
+    margin: 2rem 0;
+  }
+
+  .principle {
+    counter-increment: principle;
+    padding: 1.5rem 0 1.5rem 4rem;
+    border-bottom: 1px solid var(--rule);
+    position: relative;
+  }
+
+  .principle:last-child { border-bottom: none; }
+
+  .principle::before {
+    content: counter(principle);
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 1.8rem;
+    color: var(--accent);
+    opacity: 0.4;
+    position: absolute;
+    left: 0;
+    top: 1.3rem;
+  }
+
+  .principle strong {
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+
+  .principle p {
+    font-size: 0.9rem;
+    color: var(--warm-gray);
+    margin: 0;
+  }
+
+  /* ─── FOOTER ─── */
+  .doc-footer {
+    background: var(--ink);
+    color: var(--warm-gray);
+    padding: 3rem 5vw;
+    font-size: 0.78rem;
+    text-align: center;
+  }
+
+  .doc-footer p {
+    max-width: 40rem;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 768px) {
+    .persona-grid { grid-template-columns: 1fr; }
+    .lp-steps { grid-template-columns: 1fr; }
+    .narrative { grid-template-columns: 1fr; padding-left: 2rem; }
+    .narrative::before { left: 0; }
+    .narrative-marker { writing-mode: horizontal-tb; padding-top: 0; margin-bottom: 0.5rem; }
+    .narrative-marker::before { left: -2rem; top: 50%; transform: translateY(-50%); }
+    .oneliner { grid-template-columns: 1fr; gap: 0.25rem; }
+    .day-row { grid-template-columns: 1fr; gap: 0.25rem; }
+    .demo-timeline { padding-left: 3rem; }
+    .demo-time { left: -3rem; width: 2.5rem; font-size: 0.6rem; }
+  }
+
+  /* ─── ANIMATIONS ─── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .cover h1, .cover-meta, .cover-label {
+    animation: fadeUp 0.8s ease-out both;
+  }
+
+  .cover-label { animation-delay: 0.1s; }
+  .cover h1 { animation-delay: 0.25s; }
+  .cover-meta { animation-delay: 0.45s; }
+</style>
+</head>
+<body>
+
+<!-- ═══ COVER ═══ -->
+<header class="cover">
+  <div class="cover-label">Marketing Campaign Plan</div>
+  <h1>Business Travel Search <em>&mdash; Go-to-Market</em></h1>
+  <dl class="cover-meta">
+    <div>
+      <dt>Status</dt>
+      <dd>Complete &mdash; Ready for Review</dd>
+    </div>
+    <div>
+      <dt>Date</dt>
+      <dd>February 2026</dd>
+    </div>
+    <div>
+      <dt>Version</dt>
+      <dd>v1.0</dd>
+    </div>
+    <div>
+      <dt>Prepared by</dt>
+      <dd>Claude Marketing Agent</dd>
+    </div>
+  </dl>
+</header>
+
+<!-- ═══ NAV ═══ -->
+<div class="toc-bar">
+  <nav>
+    <a href="#personas">Personas</a>
+    <a href="#narrative">Narrative</a>
+    <a href="#landing-page">Landing Page</a>
+    <a href="#launch">Launch Strategy</a>
+    <a href="#demo">Demo Flow</a>
+    <a href="#press">Press</a>
+    <a href="#calendar">Calendar</a>
+  </nav>
+</div>
+
+<!-- ═══ STATUS ═══ -->
+<div class="status-strip">
+  <span>7 / 7 sections complete</span>
+  <span class="badge">ALL TODOS RESOLVED</span>
+</div>
+
+<!-- ═══ THESIS ═══ -->
+<div class="thesis">
+  <blockquote>
+    Every airline website could be improved by a conversational search agent. We're proving it with open source.
+  </blockquote>
+</div>
+
+<!-- ═══ 1. PERSONAS ═══ -->
+<section class="section" id="personas">
+  <div class="section-inner">
+    <span class="section-number">Section 01</span>
+    <h2>Target Personas</h2>
+    <p class="section-lead">Three archetypes that represent our launch audience. Each has a distinct pain point, a different discovery channel, and a unique conversion path.</p>
+
+    <div class="persona-grid">
+      <!-- Jordan -->
+      <div class="persona-card primary">
+        <span class="persona-tag">Primary Persona</span>
+        <div class="persona-name">&ldquo;Jordan&rdquo;</div>
+        <div class="persona-role">Senior Engineer / Technical IC &mdash; Series B+ Startup</div>
+        <ul>
+          <li>Flies 2-4x/month for client meetings, team onsites, conferences</li>
+          <li>Lives in the terminal and Slack. Finds Kayak/Google Flights tolerable but repetitive</li>
+          <li>Strong opinions about tooling. Will try an open-source project if the README is good</li>
+          <li>Frustrated that booking travel still feels like 2012</li>
+          <li>Decision-maker for their own travel (no corporate travel desk)</li>
+        </ul>
+        <div class="persona-hook">
+          <strong>What hooks them:</strong>
+          <em>&ldquo;I built an AI agent that watches my Google Calendar and books flights before I even think about it. It's open source.&rdquo;</em>
+        </div>
+        <div class="persona-path">
+          <span>GitHub star</span><span class="arrow">&rarr;</span>
+          <span>clone/install</span><span class="arrow">&rarr;</span>
+          <span>connect calendar</span><span class="arrow">&rarr;</span>
+          <span>first suggestion</span><span class="arrow">&rarr;</span>
+          <span>DAU</span>
+        </div>
+      </div>
+
+      <!-- Priya -->
+      <div class="persona-card secondary">
+        <span class="persona-tag">Secondary Persona</span>
+        <div class="persona-name">&ldquo;Priya&rdquo;</div>
+        <div class="persona-role">Ops Lead / Chief of Staff &mdash; 20-80 Person Startup</div>
+        <ul>
+          <li>Spends 3-5 hours/week coordinating team travel for board meetings, offsites, customer visits</li>
+          <li>Uses shared Google Sheets or Slack threads to gather preferences, then books manually</li>
+          <li>Tried Navan/TripActions &mdash; overpriced and rigid for a fast-moving team</li>
+          <li>Budget-conscious but values time more than saving $40 on a fare</li>
+        </ul>
+        <div class="persona-hook">
+          <strong>What hooks them:</strong>
+          <em>&ldquo;I used to spend half a day booking flights for our 8-person offsite. Now I type one message and everyone gets personalized options in 2 minutes.&rdquo;</em>
+        </div>
+        <div class="persona-path">
+          <span>team-travel demo</span><span class="arrow">&rarr;</span>
+          <span>org install</span><span class="arrow">&rarr;</span>
+          <span>connect calendars</span><span class="arrow">&rarr;</span>
+          <span>first group trip</span><span class="arrow">&rarr;</span>
+          <span>champion</span>
+        </div>
+      </div>
+
+      <!-- Marcus -->
+      <div class="persona-card tertiary">
+        <span class="persona-tag">Tertiary Persona</span>
+        <div class="persona-name">&ldquo;Marcus&rdquo;</div>
+        <div class="persona-role">Independent Consultant / Freelancer</div>
+        <ul>
+          <li>Flies the same 3-5 routes repeatedly. Knows the optimal flights but still has to search every time</li>
+          <li>Extremely price-sensitive (paying out of pocket, billing back to clients)</li>
+          <li>Wants the cheapest direct flight that doesn't require a 5am wake-up, every single time</li>
+        </ul>
+        <div class="persona-hook">
+          <strong>What hooks them:</strong>
+          <em>&ldquo;It learned that I always fly DFW-ORD on Monday mornings, and now it just tells me when to book.&rdquo;</em>
+        </div>
+        <div class="persona-path">
+          <span>HN / podcast</span><span class="arrow">&rarr;</span>
+          <span>Quick Demo</span><span class="arrow">&rarr;</span>
+          <span>solves weekly pain</span><span class="arrow">&rarr;</span>
+          <span>real calendar</span>
+        </div>
+      </div>
+    </div>
+
+    <h3>Anti-Personas</h3>
+    <p style="font-size:0.9rem;color:var(--warm-gray);margin-bottom:1rem;">Who we are NOT targeting at launch:</p>
+    <div class="anti-personas">
+      <div class="anti-persona"><strong>Enterprise Travel Managers</strong><span>Need SAP Concur integrations, approval chains, PO numbers. We'll get there, not now.</span></div>
+      <div class="anti-persona"><strong>Leisure Travelers</strong><span>Our value prop is calendar-driven proactive booking. Leisure trips aren't on your work calendar.</span></div>
+      <div class="anti-persona"><strong>Travel Hackers</strong><span>They enjoy the search process. We're for people who want to skip it.</span></div>
+      <div class="anti-persona"><strong>Airlines / TMCs</strong><span>We're not selling B2B2B at launch. We're going direct.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 2. NARRATIVE ═══ -->
+<section class="section" id="narrative">
+  <div class="section-inner">
+    <span class="section-number">Section 02</span>
+    <h2>Campaign Narrative</h2>
+    <p class="section-lead">The lead angle, the story arc, and the messaging toolkit for every channel.</p>
+
+    <div class="angle-winner">
+      <h3>&ldquo;Your calendar already knows.&rdquo;</h3>
+      <ul>
+        <li>Communicates the core product insight in four words</li>
+        <li>Instantly relatable &mdash; every business traveler has had the &ldquo;oh crap, I need a flight&rdquo; moment</li>
+        <li>Differentiates from every travel search product that starts with a search box</li>
+        <li>Implies intelligence without saying &ldquo;AI&rdquo; (fatigued as a marketing term in 2026)</li>
+        <li>Works across all three personas</li>
+      </ul>
+    </div>
+
+    <h3>The Narrative Arc</h3>
+    <div class="narrative">
+      <div class="narrative-marker">Setup</div>
+      <div class="narrative-content">
+        <h3>The Problem</h3>
+        <p>You have 14 meetings on your calendar this week. Three of them are in cities you don't live in. You know you need to book flights, but you haven't yet because the process is tedious: open Google Flights, type the city, pick dates, compare prices, check your loyalty program, check bag policies, remember your seat preference. Multiply that by three trips. Multiply that by every week.</p>
+        <p>This is the state of business travel in 2026. We have AI that can write novels and generate photorealistic video, but booking a flight still requires you to manually type &ldquo;SFO to ORD&rdquo; into a search box like it's 2009.</p>
+      </div>
+
+      <div class="narrative-marker">Conflict</div>
+      <div class="narrative-content">
+        <h3>Why It's Broken</h3>
+        <p>Travel search engines are incentivized to show you MORE options, not better ones. They make money when you click, when you compare, when you agonize. The search process is the product &mdash; and it's designed to keep you searching.</p>
+        <p>Corporate travel platforms (Navan, TripActions) tried to fix this for enterprises but created a different problem: rigid policies, clunky approval workflows, and a one-size-fits-all approach.</p>
+        <p><strong>Neither model starts from the obvious question: where do you already need to be?</strong></p>
+      </div>
+
+      <div class="narrative-marker">Resolution</div>
+      <div class="narrative-content">
+        <h3>Our Approach</h3>
+        <p>BusinessTravelSearch reads your calendar. When it sees &ldquo;Q2 Planning &mdash; Austin Office&rdquo; on Thursday, it already knows you need a flight from wherever you are to AUS, arriving Wednesday night or Thursday morning.</p>
+        <p>It finds your options, ranks them honestly &mdash; cheapest, fastest, best for your preferences &mdash; with clear trade-offs explained. And sends you a link to book directly on the airline's website at the airline's price. No markup. No commission-biased ranking. No dark patterns.</p>
+        <p><strong>You spend 10 seconds confirming instead of 10 minutes searching.</strong></p>
+      </div>
+    </div>
+
+    <h3>Supporting Angles</h3>
+    <table>
+      <thead><tr><th>Angle</th><th>Where to Use</th></tr></thead>
+      <tbody>
+        <tr><td><strong>&ldquo;Stop searching. Start traveling.&rdquo;</strong></td><td>Tagline/subhead on landing page, social posts</td></tr>
+        <tr><td><strong>Open source transparency</strong></td><td>GitHub README, HN post, developer-focused content</td></tr>
+        <tr><td><strong>The Marissa Mayer callback</strong></td><td>Press/media angle, thought-leadership blog posts</td></tr>
+        <tr><td><strong>Group travel pain</strong></td><td>Feature-specific content, ops-persona targeting</td></tr>
+        <tr><td><strong>&ldquo;Upgrade any airline website&rdquo;</strong></td><td>Browser extension launch (Phase 2), Product Hunt</td></tr>
+      </tbody>
+    </table>
+
+    <h3>One-Liners</h3>
+    <div class="oneliners">
+      <div class="oneliner">
+        <span class="oneliner-label">GitHub</span>
+        <span class="oneliner-text">&ldquo;Open-source AI travel agent. Reads your calendar, finds your flights, ranks them honestly.&rdquo;</span>
+      </div>
+      <div class="oneliner">
+        <span class="oneliner-label">Twitter / X</span>
+        <span class="oneliner-text">&ldquo;Your calendar already knows where you need to be. Now your travel agent does too.&rdquo;</span>
+      </div>
+      <div class="oneliner">
+        <span class="oneliner-label">Hacker News</span>
+        <span class="oneliner-text">&ldquo;Show HN: I built an AI agent that watches my calendar and books flights before I think about it&rdquo;</span>
+      </div>
+      <div class="oneliner">
+        <span class="oneliner-label">Conference</span>
+        <span class="oneliner-text">&ldquo;Why the best travel search starts with your calendar, not a search box&rdquo;</span>
+      </div>
+      <div class="oneliner">
+        <span class="oneliner-label">Cold Email</span>
+        <span class="oneliner-text">&ldquo;Your team's calendars say they need 23 flights next month&rdquo;</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 3. LANDING PAGE ═══ -->
+<section class="section" id="landing-page">
+  <div class="section-inner">
+    <span class="section-number">Section 03</span>
+    <h2>Landing Page Copy</h2>
+    <p class="section-lead">Full wireframe-ready copy for the marketing site. Every section below maps to a page section.</p>
+
+    <!-- Browser mockup -->
+    <div class="lp-mockup">
+      <div class="lp-browser-bar">
+        <div class="lp-dot"></div>
+        <div class="lp-dot"></div>
+        <div class="lp-dot"></div>
+        <span class="lp-url">businesstravelsearch.com</span>
+      </div>
+      <div class="lp-hero">
+        <h2>Your calendar already knows where you need to be.</h2>
+        <p>An open-source AI travel agent that reads your calendar, finds your flights, and ranks them honestly &mdash; no hidden markups, no commission-biased results. Just the best option for you, explained clearly.</p>
+        <div class="lp-buttons">
+          <span class="lp-btn primary">Try the Demo</span>
+          <span class="lp-btn secondary">View on GitHub</span>
+        </div>
+        <div class="lp-social-proof">Open source &middot; Self-hostable &middot; Ranking transparency you can read the code of</div>
+      </div>
+      <div class="lp-steps">
+        <div class="lp-step">
+          <div class="lp-step-num">1</div>
+          <h4>Connect your calendar</h4>
+          <p>Link Google or Outlook with one click. We scan for events that imply travel &mdash; context, not just keywords.</p>
+        </div>
+        <div class="lp-step">
+          <div class="lp-step-num">2</div>
+          <h4>Get proactive flight options</h4>
+          <p>Options ranked by YOUR priorities with honest trade-off explanations. &ldquo;$80 cheaper but has a 2-hour layover.&rdquo;</p>
+        </div>
+        <div class="lp-step">
+          <div class="lp-step-num">3</div>
+          <h4>Book on the airline's site</h4>
+          <p>Click through to the airline's own price. No middleman markup. No bait-and-switch.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="copy-block" data-label="Problem Section">
+      <h3>Business travel booking is stuck in 2009.</h3>
+      <p>You have a meeting in Chicago on Tuesday. You know this because it's on your calendar. Your calendar app knows it. Your email knows it. Your Slack knows it.</p>
+      <p>But none of them will book you a flight.</p>
+      <p>So you open Google Flights. You type &ldquo;SFO to ORD.&rdquo; You pick dates. You compare 47 results. You check your United status. You wonder if the basic economy fare includes a carry-on. You open three tabs. You forget which one had the better departure time.</p>
+      <p>Twenty minutes later, you've booked a flight you're not even sure was the best option. Now multiply that by 3 trips a week. 12 trips a month. For your whole team.</p>
+      <p><strong>This is what we're fixing.</strong></p>
+    </div>
+
+    <div class="copy-block" data-label="Honesty Section">
+      <h3>We show you the best flight, not the most profitable one.</h3>
+      <p>Travel search engines make money when you click on results. That creates an incentive to show options that generate the highest commission &mdash; not the options that are actually best for you.</p>
+      <p>BusinessTravelSearch has no booking commission. We don't mark up fares. We don't have &ldquo;sponsored&rdquo; results. When we rank a $340 United direct flight above a $290 Spirit connection, it's because your preferences say you value nonstop flights and you have United status &mdash; not because United pays us more.</p>
+      <p>Every ranking decision is transparent. Every trade-off is explained in plain language. And the algorithm is open source, so you can verify it yourself.</p>
+    </div>
+
+    <div class="copy-block" data-label="Team Travel Section">
+      <h3>Book a team trip in one message, not twelve browser tabs.</h3>
+      <p>&ldquo;The engineering team needs to be in Austin for the offsite.&rdquo;</p>
+      <p>That's it. That's the input. BusinessTravelSearch reads each team member's calendar, knows their home airports, applies their individual preferences (Jordan prefers aisle seats on American, Priya wants the earliest arrival, Marcus needs the cheapest option), and presents a coordinated plan.</p>
+      <p>One message in. Personalized options for everyone out. Each person books on their own airline site with one click.</p>
+    </div>
+
+    <div class="copy-block" data-label="Technical Section">
+      <h3>Open source. Self-hostable. Built by developers, for developers.</h3>
+      <table>
+        <tbody>
+          <tr><td><strong>TypeScript/Node.js</strong></td><td>Clean, typed codebase you can actually contribute to</td></tr>
+          <tr><td><strong>Claude API</strong></td><td>LLM-powered event analysis and preference learning</td></tr>
+          <tr><td><strong>Duffel API</strong></td><td>Modern flight search with real-time pricing</td></tr>
+          <tr><td><strong>OAuth2</strong></td><td>Secure calendar access (Google + Microsoft 365)</td></tr>
+          <tr><td><strong>Self-hostable</strong></td><td>Run it on your own infrastructure. Your calendar data stays yours.</td></tr>
+          <tr><td><strong>Extensible</strong></td><td>Add new calendar sources, flight APIs, or booking channels</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+<span class="cmd">git clone</span> https://github.com/[org]/businesstravelsearch
+<span class="cmd">npm install</span>
+<span class="cmd">npm run dev</span>
+<span class="comment"># Running at localhost:3000 — try the Quick Demo</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 4. LAUNCH STRATEGY ═══ -->
+<section class="section" id="launch">
+  <div class="section-inner">
+    <span class="section-number">Section 04</span>
+    <h2>Open-Source Launch Strategy</h2>
+    <p class="section-lead">A channel-by-channel playbook for launch day and the first month. HN is the tip of the spear.</p>
+
+    <h3>Month 1 Targets</h3>
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-value">3K</div>
+        <div class="metric-label">GitHub Stars</div>
+        <div class="metric-target">200 day 1 &rarr; 1K week 1</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value">300</div>
+        <div class="metric-label">Forks</div>
+        <div class="metric-target">20 day 1 &rarr; 100 week 1</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value">5K</div>
+        <div class="metric-label">Demo Completions</div>
+        <div class="metric-target">500 day 1 &rarr; 2K week 1</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value">500K</div>
+        <div class="metric-label">Twitter Impressions</div>
+        <div class="metric-target">50K day 1 &rarr; 200K week 1</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value">30</div>
+        <div class="metric-label">Contributors</div>
+        <div class="metric-target">2 day 1 &rarr; 10 week 1</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value">2K</div>
+        <div class="metric-label">Email Signups</div>
+        <div class="metric-target">100 day 1 &rarr; 500 week 1</div>
+      </div>
+    </div>
+
+    <h3>Channel Strategy</h3>
+    <div class="channel-cards">
+      <div class="channel-card">
+        <h4>Hacker News</h4>
+        <p>Primary channel. Show HN format. Post Tuesday or Wednesday, 8-9am ET. Stay online 4-6 hours. Answer every comment. The open-source + honest-ranking angle plays well here.</p>
+      </div>
+      <div class="channel-card">
+        <h4>Twitter / X</h4>
+        <p>8-tweet thread launching same morning. Personal founder narrative. Quote-tweet with technical details as questions come in. Pin the thread.</p>
+      </div>
+      <div class="channel-card">
+        <h4>Reddit</h4>
+        <p>5 subreddits with custom angles: r/SideProject (polished MVP), r/selfhosted (privacy), r/typescript (architecture), r/digitalnomad (lifestyle), r/businesstravel (transparency).</p>
+      </div>
+      <div class="channel-card">
+        <h4>Dev Communities</h4>
+        <p>Dev.to deep-dive on the ranking algorithm. Hashnode founder narrative. Discord posts in TypeScript, AI builder, and Duffel communities.</p>
+      </div>
+      <div class="channel-card">
+        <h4>GitHub Growth</h4>
+        <p>Weekly releases with real changelogs. Respond to every issue within 24 hours. Merge first-time contributor PRs fast. Public roadmap as GitHub Project board.</p>
+      </div>
+      <div class="channel-card">
+        <h4>Product Hunt</h4>
+        <p>Week 4 launch &mdash; after organic community is established. Lead with the &ldquo;Upgrade any airline website&rdquo; browser extension angle.</p>
+      </div>
+    </div>
+
+    <h3>The Show HN Post</h3>
+    <div class="hn-post">
+      <div class="hn-title">Show HN: Open-source AI travel agent that reads your calendar and books flights honestly</div>
+      <div class="hn-meta">by [founder] | [x] points | [x] comments</div>
+      <p>Hey HN &mdash; I built an open-source travel agent that connects to your Google/Outlook calendar, detects events that imply travel, and proactively finds flights ranked by your actual preferences (not commission).</p>
+      <p>The insight: your calendar already contains 90% of the information a travel search engine asks you to manually type. City, dates, time constraints &mdash; it's all there in the event metadata. So why are we still typing &ldquo;SFO to ORD, March 12-14&rdquo; into a search box?</p>
+      <p><strong>How it works:</strong></p>
+      <p>1. Connect your calendar (OAuth2, your data stays local if self-hosted)<br>
+      2. It scans for travel-implying events using LLM-powered analysis<br>
+      3. Finds flights via Duffel API, ranks by your preferences with transparent trade-offs<br>
+      4. Deep-links you to the airline's own site to book at their price (no markup)</p>
+      <p>The ranking is fully transparent &mdash; it explains WHY it ranked option A over option B in plain English (&ldquo;$80 cheaper but adds a 2hr layover in DFW&rdquo;). No sponsored results, no commission bias. The algorithm is in the repo if you want to audit it.</p>
+      <p>Stack: TypeScript, Node.js, Claude API, Duffel API, Express, WebSocket</p>
+      <p>Built this because I fly 3x/month for client work and was tired of the manual search-compare-book loop. Would love feedback on the ranking transparency approach &mdash; is this the right level of detail, or too much?</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ 5. DEMO FLOW ═══ -->
+<section class="section" id="demo">
+  <div class="section-inner">
+    <span class="section-number">Section 05</span>
+    <h2>The 30-Second Demo</h2>
+    <p class="section-lead">What a visitor experiences from clicking &ldquo;Try the Demo&rdquo; to the aha moment. No signup required. Zero friction to value.</p>
+
+    <div class="demo-timeline">
+      <div class="demo-step">
+        <span class="demo-time">0&ndash;3s</span>
+        <h4>Arrival</h4>
+        <p>Visitor lands from HN, Twitter, or GitHub README. Sees headline + two buttons. Clicks &ldquo;Try the Demo.&rdquo;</p>
+      </div>
+
+      <div class="demo-step">
+        <span class="demo-time">3&ndash;8s</span>
+        <h4>The Chat Opens</h4>
+        <p>Clean chat interface. No login wall. No onboarding wizard. The agent speaks first:</p>
+        <div class="chat-bubble">I just scanned your calendar for this week. I found 3 events that look like they need travel. Let me show you the first one.</div>
+      </div>
+
+      <div class="demo-step">
+        <span class="demo-time">8&ndash;15s</span>
+        <h4>Calendar Intelligence &mdash; The Aha Moment</h4>
+        <p>The agent shows what it detected:</p>
+        <div class="chat-bubble">
+          <strong>Detected: &ldquo;Q2 Planning &mdash; Austin Office&rdquo;</strong><br>
+          Thursday March 5, 9:00 AM &ndash; 5:00 PM<br><br>
+          This looks like an in-person meeting at your Austin office. Based on your San Francisco home base, you'd need to fly SFO &rarr; AUS, arriving Wednesday evening or Thursday morning early.<br><br>
+          Want me to find flights?
+        </div>
+      </div>
+
+      <div class="demo-step">
+        <span class="demo-time">15&ndash;25s</span>
+        <h4>Honest Flight Results</h4>
+        <p>Visitor types &ldquo;yes&rdquo; or clicks a suggested reply. Results arrive with trade-off explanations:</p>
+        <div class="chat-bubble">
+          <strong>3 options for SFO &rarr; AUS, Wed Mar 4 &ndash; Fri Mar 6:</strong>
+          <span class="flight-option">
+            <span class="flight-label">Best overall:</span> United UA 1547 &mdash; Nonstop, 6:15pm, $387 RT<br>
+            <span class="flight-detail">Matches your United status. Arrives same night so no hotel needed.</span>
+          </span>
+          <span class="flight-option">
+            <span class="flight-label">Cheapest:</span> Southwest WN 2283 &mdash; Nonstop, 2:10pm, $294 RT<br>
+            <span class="flight-detail">$93 less, but you'd miss your 3pm standup. Free bags though.</span>
+          </span>
+          <span class="flight-option">
+            <span class="flight-label">Earliest arrival:</span> American AA 814 &mdash; 1 stop (DFW), 7:00am, $341 RT<br>
+            <span class="flight-detail">Gets you there by lunch Thursday, but 5am wake-up and a layover.</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="demo-step">
+        <span class="demo-time">25&ndash;30s</span>
+        <h4>The Hook</h4>
+        <p>The agent follows up with more detected events and the real calendar CTA:</p>
+        <div class="chat-bubble">
+          I also found 2 more travel events this week: a client meeting in Chicago on Monday and a conference in Denver next Friday.<br><br>
+          Connect your real calendar and I'll do this automatically every week.
+        </div>
+      </div>
+    </div>
+
+    <h3>Key Design Decisions</h3>
+    <table>
+      <thead><tr><th>Decision</th><th>Rationale</th></tr></thead>
+      <tbody>
+        <tr><td><strong>No signup required</strong></td><td>Zero friction to the aha moment. Demo runs entirely in mock mode.</td></tr>
+        <tr><td><strong>Agent talks first</strong></td><td>Don't make the visitor figure out what to type. Demonstrate proactive value.</td></tr>
+        <tr><td><strong>3 options, not 30</strong></td><td>Curation and explanation IS the differentiation. Overwhelming options is the problem.</td></tr>
+        <tr><td><strong>Trade-off language visible</strong></td><td>&ldquo;$93 less, but you'd miss your 3pm standup&rdquo; &mdash; this is what people remember.</td></tr>
+        <tr><td><strong>Real airline names</strong></td><td>Mock data with real airlines and plausible prices. If it feels fake, the pitch collapses.</td></tr>
+        <tr><td><strong>One-click to real calendar</strong></td><td>Transition from demo to real usage is a single OAuth click, not a registration form.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══ 6. PRESS ═══ -->
+<section class="section" id="press">
+  <div class="section-inner">
+    <span class="section-number">Section 06</span>
+    <h2>Press &amp; Media Outreach</h2>
+    <p class="section-lead">The Marissa Mayer hook, tiered publication targets, and the pitch email. Not a product launch &mdash; a narrative about why travel search has been broken for 15 years.</p>
+
+    <div class="copy-block" data-label="The Hook">
+      <h3>The Story We're Pitching</h3>
+      <p>In 2012, Marissa Mayer described her vision for travel search: your phone should know from your calendar that you have a meeting in Chicago on Tuesday and proactively find your flight. Google had all the pieces &mdash; Gmail, Calendar, Flights, Maps &mdash; and never connected them.</p>
+      <p>Fourteen years later, that vision is still unrealized inside Google. <strong>We built it as an open-source project in 30 source files.</strong></p>
+      <p>This isn't &ldquo;another AI startup&rdquo; &mdash; it's a specific, well-known industry figure's unrealized vision, built by indie developers with LLMs, and given away as open source. That's a story.</p>
+    </div>
+
+    <h3>Target Publications</h3>
+    <table>
+      <thead><tr><th>Tier</th><th>Publication</th><th>Angle</th></tr></thead>
+      <tbody>
+        <tr><td rowspan="4" style="vertical-align:top;"><strong>Tier 1</strong><br><span style="font-size:0.75rem;color:var(--warm-gray)">Aim for 1-2</span></td><td>The Verge</td><td>Open-source AI agent reads your calendar, books flights with no hidden markups</td></tr>
+        <tr><td>TechCrunch</td><td>The Marissa Mayer travel search vision, built as open source</td></tr>
+        <tr><td>Ars Technica</td><td>Technical deep-dive on honest ranking algorithms and calendar NLP</td></tr>
+        <tr><td>The Information</td><td>Why travel search is still broken and what open source can do about it</td></tr>
+        <tr><td rowspan="4" style="vertical-align:top;"><strong>Tier 2</strong><br><span style="font-size:0.75rem;color:var(--warm-gray)">Aim for 2-3</span></td><td>The New Stack</td><td>Building a Calendar-Aware AI Agent in TypeScript: Architecture Deep Dive</td></tr>
+        <tr><td>InfoQ</td><td>Honest Ranking Algorithms: An Open-Source Approach to Travel Search</td></tr>
+        <tr><td>Hacker Noon</td><td>I Built the Travel Agent Google Should Have Built</td></tr>
+        <tr><td>Dev.to (staff-picked)</td><td>Why I Open-Sourced My Business Travel Agent</td></tr>
+        <tr><td rowspan="3" style="vertical-align:top;"><strong>Tier 3</strong><br><span style="font-size:0.75rem;color:var(--warm-gray)">Aim for 1</span></td><td>Skift</td><td>Open-source travel search agent challenges OTA commission model</td></tr>
+        <tr><td>PhocusWire</td><td>Calendar-first travel booking: the next evolution of business travel?</td></tr>
+        <tr><td>Business Travel News</td><td>Self-hosted travel tool offers Navan alternative for startups</td></tr>
+      </tbody>
+    </table>
+
+    <h3>The Pitch Email</h3>
+    <div class="pitch-email">
+      <div class="pitch-email-header">
+        <span>Subject:</span> Open-source AI agent books flights by reading your calendar &mdash; the Marissa Mayer vision realized
+      </div>
+      <div class="pitch-email-body">
+        <p>Hi [name],</p>
+        <p>In 2012, Marissa Mayer described what travel search should be: your phone should know from your calendar that you have a meeting in Chicago on Tuesday and proactively find your flight. Google had every piece needed &mdash; Gmail, Calendar, Flights, Maps &mdash; and never did.</p>
+        <p>I just shipped it as an open-source project.</p>
+        <p>BusinessTravelSearch is an AI travel agent (TypeScript/Node.js, Claude API) that connects to your Google or Outlook calendar, detects events that imply travel, and proactively finds flights ranked by your actual preferences. The ranking is fully transparent &mdash; the agent explains trade-offs in plain English &mdash; and there's no booking commission distorting results.</p>
+        <p>A few things that might be interesting:</p>
+        <p>&bull; <strong>The Mayer callback:</strong> Why the most obvious product Google could have built still doesn't exist 14 years later<br>
+        &bull; <strong>The honesty angle:</strong> What happens when you remove commission incentives from flight ranking<br>
+        &bull; <strong>The open-source play:</strong> Why calendar + travel data is sensitive enough that the code should be auditable<br>
+        &bull; <strong>30 source files:</strong> Modern LLMs + good APIs made it possible for a tiny team to build what used to require an enterprise</p>
+        <p>Happy to do a demo call, share the GitHub repo, or send you a pre-configured instance to play with.</p>
+        <p>Best,<br>[name]</p>
+      </div>
+    </div>
+
+    <h4>Embargo Strategy</h4>
+    <p style="font-size:0.9rem;">No embargo. Open-source launches work best with simultaneous public access. HN post, Twitter thread, and media outreach all go live the same day. Journalists can get advance repo access 2-3 days before.</p>
+  </div>
+</section>
+
+<!-- ═══ 7. CONTENT CALENDAR ═══ -->
+<section class="section" id="calendar">
+  <div class="section-inner">
+    <span class="section-number">Section 07</span>
+    <h2>Content Calendar</h2>
+    <p class="section-lead">From T-7 pre-launch prep through the first month. Day-by-day actions with channels and owners.</p>
+
+    <div class="calendar-grid">
+      <div class="calendar-phase">
+        <div class="calendar-phase-header">Pre-Launch (T-7 to T-1)</div>
+        <div class="day-row"><span class="day-label">T-7</span><span>Finalize GitHub README with screenshots, install instructions, architecture diagram</span><span class="day-channel">GitHub</span></div>
+        <div class="day-row"><span class="day-label">T-7</span><span>Record 90-second demo video (screen capture of Quick Demo flow)</span><span class="day-channel">Video</span></div>
+        <div class="day-row"><span class="day-label">T-6</span><span>Write &ldquo;Why I Built This&rdquo; blog post</span><span class="day-channel">Blog</span></div>
+        <div class="day-row"><span class="day-label">T-6</span><span>Write Dev.to technical deep-dive on the ranking algorithm</span><span class="day-channel">Dev.to</span></div>
+        <div class="day-row"><span class="day-label">T-5</span><span>Send advance pitch emails to Tier 1 journalists (with private repo access)</span><span class="day-channel">Email</span></div>
+        <div class="day-row"><span class="day-label">T-5</span><span>Set up landing page at production domain with demo embed</span><span class="day-channel">Web</span></div>
+        <div class="day-row"><span class="day-label">T-4</span><span>Seed 5-8 &ldquo;good first issue&rdquo; GitHub issues</span><span class="day-channel">GitHub</span></div>
+        <div class="day-row"><span class="day-label">T-3</span><span>Prepare all social copy (HN, Twitter thread, Reddit posts) &mdash; write but don't publish</span><span class="day-channel">All</span></div>
+        <div class="day-row"><span class="day-label">T-2</span><span>Test full demo flow end-to-end. Have 3 outside people try it cold.</span><span class="day-channel">QA</span></div>
+        <div class="day-row"><span class="day-label">T-1</span><span>Final repo polish: license, code of conduct, contributing guide, changelog</span><span class="day-channel">GitHub</span></div>
+      </div>
+
+      <div class="calendar-phase">
+        <div class="calendar-phase-header">Launch Day (Tuesday)</div>
+        <div class="day-row"><span class="day-label">8:00 AM</span><span>Make GitHub repo public</span><span class="day-channel">GitHub</span></div>
+        <div class="day-row"><span class="day-label">8:15 AM</span><span>Post &ldquo;Show HN&rdquo; to Hacker News</span><span class="day-channel">HN</span></div>
+        <div class="day-row"><span class="day-label">8:30 AM</span><span>Post Twitter/X thread (tweet 1, then replies every 3-5 min)</span><span class="day-channel">Twitter</span></div>
+        <div class="day-row"><span class="day-label">8:30 AM</span><span>Send pitch emails to Tier 2 and Tier 3 journalists</span><span class="day-channel">Email</span></div>
+        <div class="day-row"><span class="day-label">9:00 AM</span><span>Publish &ldquo;Why I Built This&rdquo; blog post with links to repo and demo</span><span class="day-channel">Blog</span></div>
+        <div class="day-row"><span class="day-label">9am&ndash;2pm</span><span>Actively monitor and respond to every HN comment</span><span class="day-channel">HN</span></div>
+        <div class="day-row"><span class="day-label">2:00 PM</span><span>Post to r/SideProject</span><span class="day-channel">Reddit</span></div>
+        <div class="day-row"><span class="day-label">3:00 PM</span><span>Post to r/selfhosted</span><span class="day-channel">Reddit</span></div>
+        <div class="day-row"><span class="day-label">6:00 PM</span><span>Evening check: respond to all new comments, tweets, GitHub issues</span><span class="day-channel">All</span></div>
+        <div class="day-row"><span class="day-label">9:00 PM</span><span>Post day-1 metrics internally. Adjust Day 1 plan if needed.</span><span class="day-channel">Internal</span></div>
+      </div>
+
+      <div class="calendar-phase">
+        <div class="calendar-phase-header">Launch Week (Days 1&ndash;5)</div>
+        <div class="day-row"><span class="day-label">Day 1</span><span>Respond to overnight HN + Twitter. Post to r/typescript and r/node. Publish Dev.to article. Merge quick-win PRs.</span><span class="day-channel">Multi</span></div>
+        <div class="day-row"><span class="day-label">Day 2</span><span>Post to r/digitalnomad and r/businesstravel. Cross-post blog to Hashnode. Tweet feature highlights. Post in Discord servers.</span><span class="day-channel">Multi</span></div>
+        <div class="day-row"><span class="day-label">Day 3</span><span>&ldquo;Launch Week Numbers&rdquo; tweet thread. First changelog release (v0.1.1). Send thank-you DMs.</span><span class="day-channel">Twitter/GitHub</span></div>
+        <div class="day-row"><span class="day-label">Day 4-5</span><span>Monitor incoming issues/PRs. Review analytics: which content drove demo completions? Prep Week 2.</span><span class="day-channel">Internal</span></div>
+      </div>
+
+      <div class="calendar-phase">
+        <div class="calendar-phase-header">Weeks 2&ndash;4</div>
+        <div class="day-row"><span class="day-label">Week 2</span><span>&ldquo;How the Calendar Event Analyzer Works&rdquo; deep-dive. &ldquo;5 things I learned launching.&rdquo; IndieHackers post. &ldquo;Honest Ranking Manifesto.&rdquo; v0.2.0 release.</span><span class="day-channel">Blog/Social</span></div>
+        <div class="day-row"><span class="day-label">Week 3</span><span>Duffel API developer review. Self-hosting video walkthrough. Multi-agent architecture post. Podcast appearances. Preference learning spotlight.</span><span class="day-channel">Blog/Video/Audio</span></div>
+        <div class="day-row"><span class="day-label">Week 4</span><span>&ldquo;One Month of Open-Source Travel Search&rdquo; retrospective. <strong>Product Hunt launch.</strong> Browser extension teaser. Public roadmap post. Month 1 metrics review.</span><span class="day-channel">PH/Blog</span></div>
+      </div>
+    </div>
+
+    <h3>Content Principles</h3>
+    <div class="principles">
+      <div class="principle">
+        <strong>Every piece of content should be independently valuable.</strong>
+        <p>Don't just promote the product &mdash; teach something, share a technical insight, or tell a story. The dev community will ignore pure marketing.</p>
+      </div>
+      <div class="principle">
+        <strong>Show the code.</strong>
+        <p>Every technical blog post should include real code snippets from the repo with links to the specific files. This builds trust and drives GitHub traffic.</p>
+      </div>
+      <div class="principle">
+        <strong>Respond to everything.</strong>
+        <p>In the first month, respond to every tweet, every HN comment, every GitHub issue, every Reddit reply. The founder's presence in the conversation is the marketing.</p>
+      </div>
+      <div class="principle">
+        <strong>Let the community write the narrative.</strong>
+        <p>If someone tweets that BusinessTravelSearch found them a cheaper flight, that's 10x more valuable than anything you write. Amplify user stories relentlessly.</p>
+      </div>
+      <div class="principle">
+        <strong>Don't say &ldquo;AI&rdquo; more than necessary.</strong>
+        <p>Lead with what it does (reads your calendar, finds flights, explains trade-offs), not how it does it. The technology is the means, not the message.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer class="doc-footer">
+  <p>BusinessTravelSearch Marketing Campaign Plan &middot; v1.0 &middot; February 2026<br>
+  Generated by Claude Marketing Agent &middot; 7 sections &middot; Ready for review and execution</p>
+</footer>
+
+</body>
+</html>
